@@ -1,0 +1,232 @@
+﻿@model List<BurgerMenuViewModel>
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Burger Menü ve Ürün Listesi</title>
+    <style>
+        /* Temel Reset */
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #fff;
+            color: #222;
+        }
+
+        /* Header ve Hamburger Menü Butonu */
+        header {
+            background-color: #333;
+            color: white;
+            padding: 15px 20px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+            header h1 {
+                margin: 0;
+                font-size: 1.5rem;
+            }
+
+        .menu-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            width: 30px;
+            height: 25px;
+            position: relative;
+            z-index: 1100;
+        }
+
+            .menu-btn span,
+            .menu-btn span::before,
+            .menu-btn span::after {
+                display: block;
+                background-color: white;
+                height: 3px;
+                width: 100%;
+                border-radius: 2px;
+                position: absolute;
+                transition: all 0.3s ease;
+            }
+
+            .menu-btn span {
+                top: 50%;
+                transform: translateY(-50%);
+            }
+
+                .menu-btn span::before {
+                    content: "";
+                    top: -10px;
+                }
+
+                .menu-btn span::after {
+                    content: "";
+                    top: 10px;
+                }
+
+            .menu-btn.open span {
+                background-color: transparent;
+            }
+
+                .menu-btn.open span::before {
+                    top: 0;
+                    transform: rotate(45deg);
+                }
+
+                .menu-btn.open span::after {
+                    top: 0;
+                    transform: rotate(-45deg);
+                }
+
+        /* Yan Menü (Sidebar) */
+        nav {
+            position: fixed;
+            top: 0;
+            left: -260px;
+            width: 260px;
+            height: 100vh;
+            background-color: #444;
+            padding-top: 60px; /* header yüksekliği */
+            box-shadow: 2px 0 6px rgba(0,0,0,0.3);
+            transition: left 0.3s ease;
+            z-index: 1050;
+        }
+
+            nav.open {
+                left: 0;
+            }
+
+            nav ul {
+                list-style: none;
+                padding: 0;
+                margin: 0;
+            }
+
+                nav ul li {
+                    border-bottom: 1px solid #555;
+                }
+
+                    nav ul li a {
+                        display: block;
+                        padding: 15px 25px;
+                        color: #eee;
+                        text-decoration: none;
+                        font-weight: 600;
+                        transition: background-color 0.2s ease;
+                    }
+
+                        nav ul li a:hover {
+                            background-color: #555;
+                        }
+
+        /* Ana İçerik */
+        main {
+            padding: 80px 20px 20px 20px; /* üst boşluk header için */
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .product-card {
+            display: flex;
+            align-items: center;
+            background: #f7f7f7;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgb(0 0 0 / 0.1);
+            margin-bottom: 20px;
+            padding: 15px;
+            gap: 15px;
+        }
+
+            .product-card img {
+                width: 70px;
+                height: 70px;
+                border-radius: 50%;
+                object-fit: cover;
+                border: 1px solid #ccc;
+                flex-shrink: 0;
+            }
+
+        .product-info {
+            flex-grow: 1;
+        }
+
+        .product-name {
+            font-weight: 700;
+            font-size: 1.2rem;
+            margin: 0 0 6px 0;
+            color: #333;
+        }
+
+        .product-desc {
+            margin: 0 0 8px 0;
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .product-price {
+            font-weight: 600;
+            font-size: 1rem;
+            color: #27ae60;
+        }
+
+
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Burger Menü</h1>
+        <button id="menu-btn" class="menu-btn" aria-label="Menüyü Aç/Kapat"><span></span></button>
+    </header>
+
+    <nav id="sidebar">
+        <ul>
+            <li><a href="#">Ana Sayfa</a></li>
+            <li><a href="#">Ürünler</a></li>
+            <li><a href="#">Sepet</a></li>
+            <li><a href="#">İletişim</a></li>
+        </ul>
+    </nav>
+
+    <main>
+        @foreach (var item in Model)
+        {
+            <article class="product-card">
+                <img src="@item.images?[0]?.sm ?? " " " alt="@item.name" />
+                <div class="product-info">
+                    <h2 class="product-name">@item.name</h2>
+                    <p class="product-desc">@item.desc</p>
+                    <div class="product-price">@(item.price*40) ₺</div>
+                </div>
+            </article>
+        }
+    </main>
+
+    <script>
+        const menuBtn = document.getElementById('menu-btn');
+        const sidebar = document.getElementById('sidebar');
+
+        menuBtn.addEventListener('click', () => {
+            menuBtn.classList.toggle('open');
+            sidebar.classList.toggle('open');
+        });
+    </script>
+
+</body>
+</html>
