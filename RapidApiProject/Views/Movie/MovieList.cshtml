@@ -1,0 +1,104 @@
+﻿@model List<ImdbMovieViewModel>
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Film Listesi</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #121212;
+            color: #eee;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #ff6f61;
+        }
+        .movie-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit,minmax(280px,1fr));
+            gap: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .movie-card {
+            background: #1e1e1e;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.6);
+            transition: transform 0.3s ease;
+        }
+        .movie-card:hover {
+            transform: scale(1.05);
+        }
+        .movie-image {
+            width: 100%;
+            height: 400px;
+            object-fit: cover;
+        }
+        .movie-content {
+            padding: 15px;
+        }
+        .movie-rank {
+            font-weight: bold;
+            font-size: 1.2rem;
+            color: #ff6f61;
+        }
+        .movie-title {
+            margin: 8px 0;
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #fff;
+        }
+        .movie-rating {
+            background: #ff6f61;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-weight: 600;
+            width: fit-content;
+            color: white;
+            font-size: 1rem;
+        }
+        .imdb-link {
+            display: inline-block;
+            margin-top: 10px;
+            text-decoration: none;
+            color: #ff6f61;
+            font-weight: 600;
+            border: 1px solid #ff6f61;
+            padding: 7px 14px;
+            border-radius: 30px;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+        .imdb-link:hover {
+            background: #ff6f61;
+            color: #121212;
+        }
+    </style>
+</head>
+<body>
+    <h1>En İyi Filmler</h1>
+    <div class="movie-list">
+        @foreach (var movie in Model)
+        {
+            <div class="movie-card">
+                <img class="movie-image" src="@movie.Big_image" alt="@movie.Title" />
+                <div class="movie-rank">#@movie.Rank</div>
+                <div class="movie-title">@movie.Title</div>
+                <div class="movie-rating">IMDb: @movie.Rating</div>
+                <a href="@movie.Imdb_link" target="_blank" class="imdb-link">IMDb Sayfası</a>
+            </div>  <!-- sadece burası kapanış -->
+        }
+
+
+    </div>
+</body>
+</html>
+
