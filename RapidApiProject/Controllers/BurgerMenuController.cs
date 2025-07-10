@@ -16,7 +16,7 @@ namespace RapidApiProject.Controllers
                 Headers =
     {
         { "x-rapidapi-key", "9b2ad97b7dmsh73dc14b9e6ed0e7p1d4084jsnb1752d00f239" },
-        { "x-rapidapi-host", "burgers-hub.p.rapidapi.com" },
+        { "x-rapidapi-host", "burgers-hub.p.rapidapi.com" }, 
     },
             };
             using (var response = await client.SendAsync(request))
