@@ -15,6 +15,8 @@ namespace RapidApiProject.Controllers
         public async Task<IActionResult> Index()
         {
             var values = _context.Games.ToList();
+            var watched= _context.Games.OrderBy(x => x.Watched);
+            var notWatched= _context.Games.OrderBy(x => !x.Watched);
             ViewBag.totalPage = values.Count;
             return View(values);
 
