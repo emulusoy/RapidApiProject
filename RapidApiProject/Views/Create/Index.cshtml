@@ -1,0 +1,214 @@
+﻿@model RapidApiProject.Models.CreateViewModel
+@{
+    Layout = null; // Veya _Layout.cshtml kullanıyorsanız uygun layout'unuzu belirtin
+}
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Yeni Öğe Oluştur</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #121212;
+            color: #eee;
+            margin: 0;
+            padding: 0;
+        }
+
+        .navbar {
+            background: #1e1e1e;
+            padding: 15px 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .navbar-brand {
+            color: #ff6f61;
+            font-size: 1.8rem;
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+        .navbar-links a {
+            color: #eee;
+            text-decoration: none;
+            margin-left: 25px;
+            font-size: 1.1rem;
+            transition: color 0.3s ease;
+        }
+
+            .navbar-links a:hover {
+                color: #ff6f61;
+            }
+
+        .container {
+            max-width: 600px;
+            margin: 40px auto;
+            background: #1e1e1e;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.6);
+        }
+
+        h1 {
+            text-align: center;
+            color: #ff6f61;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #eee;
+            font-weight: 600;
+        }
+
+        input[type="text"],
+        input[type="url"],
+        textarea,
+        select {
+            width: calc(100% - 20px);
+            padding: 10px;
+            border: 1px solid #333;
+            border-radius: 5px;
+            background: #2a2a2a;
+            color: #eee;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+            input[type="text"]:focus,
+            input[type="url"]:focus,
+            textarea:focus,
+            select:focus {
+                border-color: #ff6f61;
+                outline: none;
+            }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        input[type="checkbox"] {
+            margin-right: 10px;
+        }
+
+        .form-check {
+            display: flex;
+            align-items: center;
+            margin-top: 10px;
+        }
+
+        .btn-submit {
+            background: #ff6f61;
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: 600;
+            display: block;
+            width: 100%;
+            margin-top: 20px;
+            transition: background 0.3s ease;
+        }
+
+            .btn-submit:hover {
+                background: #e05e55;
+            }
+
+        .validation-summary-errors, .field-validation-error {
+            color: #f44336;
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            color: #ff6f61;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+            .back-link:hover {
+                color: #eee;
+            }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <a href="#" class="navbar-brand">Movie Series Game</a>
+        <div class="navbar-links">
+            <a href="/Movie/Index">Movies</a>
+            <a href="#">Series</a>
+            <a href="#">Games</a>
+            <a href="/Create/Index">Create New</a> @* Create linkini CreateController/Index'e yönlendirdik *@
+            <a href="#">About</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <h1>Yeni Öğe Ekle</h1>
+        @* Formu CreateController'ın Index aksiyonuna gönderiyoruz *@
+        <form asp-controller="Create" asp-action="Index" method="post">
+            <div asp-validation-summary="ModelOnly" class="validation-summary-errors"></div>
+
+            <div class="form-group">
+                <label asp-for="SelectedType">Türü Seçin:</label>
+                <select asp-for="SelectedType" asp-items="Model.Types">
+                    <option value="">-- Lütfen bir tür seçin --</option>
+                </select>
+                <span asp-validation-for="SelectedType" class="field-validation-error"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Title">Başlık:</label>
+                <input type="text" asp-for="Title" />
+                <span asp-validation-for="Title" class="field-validation-error"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Image">Resim URL:</label>
+                <input type="url" asp-for="Image" />
+                <span asp-validation-for="Image" class="field-validation-error"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Rating">Puan (0-10):</label>
+                <input type="text" asp-for="Rating" />
+                <span asp-validation-for="Rating" class="field-validation-error"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Description">Açıklama:</label>
+                <textarea asp-for="Description"></textarea>
+                <span asp-validation-for="Description" class="field-validation-error"></span>
+            </div>
+
+            <div class="form-check">
+                <input type="checkbox" asp-for="Watched" />
+                <label asp-for="Watched">İzlendi/Oynandı mı?</label>
+            </div>
+
+            <button type="submit" class="btn-submit">Ekle</button>
+        </form>
+        <a href="/Movie/Index" class="back-link">Listeye Geri Dön</a> @* Ana listeye dönüş linki *@
+    </div>
+</body>
+</html>
