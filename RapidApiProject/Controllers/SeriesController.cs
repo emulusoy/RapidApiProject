@@ -1,34 +1,31 @@
-﻿
-using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
+﻿using Microsoft.AspNetCore.Mvc;
 using RapidApiProject.Context;
-using RapidApiProject.Models;
 
 namespace RapidApiProject.Controllers
 {
-    public class MovieController : Controller
+    public class SeriesController : Controller
     {
         private readonly ListContext _context;
 
-        public MovieController(ListContext context)
+        public SeriesController(ListContext context)
         {
             _context = context;
         }
 
         public async Task<IActionResult> Index()
         {
-            var values = _context.Movies.ToList(); 
+            var values = _context.Series.ToList();
             ViewBag.totalPage = values.Count;
             return View(values);
 
         }
-        public async Task<IActionResult> DeleteMovie(int id)
+        public async Task<IActionResult> DeleteSeries(int id)
         {
-            var value = _context.Movies.Find(id);
-            ViewBag.totalPage = _context.Movies.Count();
+            var value = _context.Series.Find(id);
+            ViewBag.totalPage = _context.Series.Count();
             if (value != null)
             {
-                _context.Movies.Remove(value);
+                _context.Series.Remove(value);
                 await _context.SaveChangesAsync();
             }
             return RedirectToAction("Index");

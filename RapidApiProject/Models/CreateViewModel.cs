@@ -30,9 +30,9 @@ namespace RapidApiProject.Models
         // Dropdown için seçenekler (Movie, Series, Game)
         public List<SelectListItem> Types { get; set; } = new List<SelectListItem>
         {
-            new SelectListItem { Value = "Movie", Text = "Film" },
-            new SelectListItem { Value = "Series", Text = "Dizi" },
-            new SelectListItem { Value = "Game", Text = "Oyun" }
+            new SelectListItem { Value = "Movie", Text = "Movies" },
+            new SelectListItem { Value = "Series", Text = "Series" },
+            new SelectListItem { Value = "Game", Text = "Games" }
         };
     }
 }

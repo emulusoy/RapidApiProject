@@ -3,9 +3,8 @@
     Layout = null;
     int pageSize = 8;
     int currentPage = Context.Request.Query.ContainsKey("page") ? int.Parse(Context.Request.Query["page"]) : 1;
-    int totalMovies = Model.Count();
+    int totalMovies = (int)ViewBag.totalPage;
     int totalPages = (int)Math.Ceiling((double)totalMovies / pageSize);
-
     var paginatedMovies = Model.Skip((currentPage - 1) * pageSize).Take(pageSize).ToList();
 }
 <!DOCTYPE html>
@@ -18,216 +17,20 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Film Dizi Oyun</title>
-    <style>
-        body {
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        background: #121212;
-        color: #eee;
-        margin: 0;
-        padding: 0; /* Adjusted padding to allow navbar to stick to top */
-        }
 
-        .navbar {
-        background: #1e1e1e;
-        padding: 15px 20px;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.5);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        text-align: center;
-        position: sticky;
-        top: 0;
-        z-index: 1000;
-        }
-
-        .navbar-brand {
-        color: #ff6f61;
-        font-size: 1.8rem;
-        font-weight: 700;
-        text-decoration: none;
-        }
-
-        .navbar-brand-2 {
-            color: #ff6f61;
-            font-size: 1.8rem;
-            font-weight: 700;
-            text-decoration: underline;
-        }
-
-        .navbar-links a {
-        color: sandybrown;
-        text-decoration: none;
-        margin-left: 25px;
-        font-size: 1.1rem;
-        transition: color 0.3s ease;
-        }
-
-        .navbar-links a:hover {
-        color: #ff6f61;
-        }
-
-        h1 {
-        text-align: center;
-        margin: 40px 0 30px 0; /* Adjusted margin for spacing below navbar */
-        color: #ff6f61;
-        }
-
-        .movie-list {
-        display: grid;
-        grid-template-columns: repeat(auto-fit,minmax(280px,1fr));
-        gap: 20px;
-        max-width: 1200px;
-        margin: 0 auto;
-        padding: 0 20px; /* Added horizontal padding for the list */
-        }
-
-        .movie-card {
-        background: #1e1e1e;
-        border-radius: 10px;
-        overflow: hidden;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.6);
-        transition: transform 0.3s ease;
-        }
-
-        .movie-card:hover {
-        transform: scale(1.05);
-        }
-
-        .movie-image {
-        width: 100%;
-        height: 400px;
-        object-fit: cover;
-        }
-
-        .movie-content {
-            padding: 15px;
-            position: relative; /* yeni eklendi */
-            padding-bottom: 60px; /* rating ve ikonlar için alan aç */
-        }
-
-        .movie-rank {
-        font-weight: bold;
-        font-size: 1.2rem;
-        color: #ff6f61;
-        }
-
-        .movie-title {
-        margin: 8px 0;
-        font-size: 1.4rem;
-        font-weight: 700;
-        color: #fff;
-        }
-
-        .movie-rating {
-            background: #ff6f61;
-            padding: 5px 10px;
-            border-radius: 20px;
-            font-weight: 600;
-            width: fit-content;
-            color: white;
-            font-size: 1rem;
-            position: absolute;
-            bottom: 10px;
-            left: 10px;
-        }
-
-        .aDel {
-            position: absolute;
-            bottom: 10px;
-            right: 10px;
-        }
-
-        .imdb-link {
-        display: inline-block;
-        margin-top: 10px;
-        text-decoration: none;
-        color: #ff6f61;
-        font-weight: 600;
-        border: 1px solid #ff6f61;
-        padding: 7px 14px;
-        border-radius: 30px;
-        transition: background 0.3s ease, color 0.3s ease;
-        }
-
-        .imdb-link:hover {
-        background: #ff6f61;
-        color: #121212;
-        }
-
-        .pagination {
-        display: flex;
-        justify-content: center;
-        margin-top: 40px;
-        padding-bottom: 30px; /* Added padding for spacing below pagination */
-        }
-
-        .pagination a {
-        color: #ff6f61;
-        padding: 10px 18px;
-        text-decoration: none;
-        border: 1px solid #ff6f61;
-        border-radius: 5px;
-        margin: 0 5px;
-        transition: background-color 0.3s, color 0.3s;
-        }
-
-        .pagination a:hover:not(.active) {
-        background-color: #333;
-        }
-
-        .pagination a.active {
-        background-color: #ff6f61;
-        color: white;
-        border: 1px solid #ff6f61;
-        }
-
-        .pagination a.disabled {
-        color: #555;
-        border-color: #555;
-        cursor: not-allowed;
-        background-color: #222;
-        }
-
-        .watched-status {
-            position: center;
-            top: 10px;
-            right: 10px;
-            padding: 5px 10px;
-            border-radius: 5px;
-            font-weight: bold;
-            font-size: 0.9em;
-            text-transform: uppercase;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.4);
-            z-index: 10;
-			text-align: center;
-        }
-
-            .watched-status.watched {
-                background-color: #4CAF50; /* Green for watched */
-                color: white;
-            }
-
-            .watched-status.not-watched {
-                background-color: #f44336; /* Red for not watched */
-                color: white;
-            }
-
-
-
-    </style>
+    <link href="/css/emu.css" rel="stylesheet" />
 </head>
 <body>
     <div class="navbar">
         <div class="navbar-links">
-            <a href="/Movie/Index/" class="navbar-brand">Movies</a>
-            <a href="/Series/Index/" class="navbar-brand">Series</a>
-            <a href="/Game/Index/" class="navbar-brand">Games</a>
-            <a href="/Create/Index/" class="navbar-brand-2">Create</a>
-
+            <a href="/Movie/Index/" class="navbar-brand @(ViewContext.RouteData.Values["controller"].ToString() == "Movie" ? "active-nav-link" : "")">Movies</a>
+            <a href="/Series/Index/" class="navbar-brand @(ViewContext.RouteData.Values["controller"].ToString() == "Series" ? "active-nav-link" : "")">Series</a>
+            <a href="/Game/Index/" class="navbar-brand @(ViewContext.RouteData.Values["controller"].ToString() == "Game" ? "active-nav-link" : "")">Games</a>
+            <a href="/Create/Index/" class="navbar-brand @(ViewContext.RouteData.Values["controller"].ToString() == "Create" ? "active-nav-link" : "")">Create</a>
         </div>
     </div>
 
-    <h1>|List - Movies|</h1>
+    <h1 class="titlePage">|List - Movies|</h1>
     <div class="movie-list">
         @foreach (var movie in paginatedMovies)
         {
@@ -261,14 +64,14 @@
     </div>
 
     <div class="pagination">
-        <a href="@(currentPage > 1 ? $"?page={currentPage - 1}" : "#")" class="@(currentPage == 1 ? "disabled" : "")">Önceki</a>
+        <a href="@(currentPage > 1 ? $"?page={currentPage - 1}" : "#")" class="@(currentPage == 1 ? "disabled" : "")">Previous</a>
 
         @for (int i = 1; i <= totalPages; i++)
         {
             <a href="?page=@i" class="@(i == currentPage ? "active" : "")">@i</a>
         }
 
-        <a href="@(currentPage < totalPages ? $"?page={currentPage + 1}" : "#")" class="@(currentPage == totalPages ? "disabled" : "")">Sonraki</a>
+        <a href="@(currentPage < totalPages ? $"?page={currentPage + 1}" : "#")" class="@(currentPage == totalPages ? "disabled" : "")">Next</a>
     </div>
 </body>
 </html>
