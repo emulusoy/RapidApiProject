@@ -217,3 +217,26 @@ h1 {
     background-color: #f44336;
     color: white;
 }
+.filter-options {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+.filter-link {
+    color: #ff6f61;
+    padding: 8px 15px;
+    text-decoration: none;
+    border: 1px solid #ff6f61;
+    border-radius: 5px;
+    margin: 0 5px;
+    transition: background-color 0.3s, color 0.3s;
+}
+.filter-link:hover {
+        background-color: #333;
+    }
+
+    .filter-link.active-filter {
+        background-color: #ff6f61;
+        color: white;
+        border: 1px solid #ff6f61;
+        font-weight: bold;
+    }

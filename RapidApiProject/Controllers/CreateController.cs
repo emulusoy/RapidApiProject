@@ -69,7 +69,8 @@ namespace RapidApiProject.Controllers
                 }
 
                 await _context.SaveChangesAsync();
-                return RedirectToAction("Index", "Movie");
+                var values = model.SelectedType;
+                return RedirectToAction("Index", values);
             }
             return View(model);
         }

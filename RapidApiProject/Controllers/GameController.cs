@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using RapidApiProject.Context;
+using RapidApiProject.Entities;
 
 namespace RapidApiProject.Controllers
 {
@@ -12,14 +13,26 @@ namespace RapidApiProject.Controllers
             _context = context;
         }
 
-        public async Task<IActionResult> Index()
+        public IActionResult Index(string filter = "all")
         {
-            var values = _context.Games.ToList();
-            var watched= _context.Games.OrderBy(x => x.Watched);
-            var notWatched= _context.Games.OrderBy(x => !x.Watched);
-            ViewBag.totalPage = values.Count;
-            return View(values);
+            IQueryable<Game> gamesQuery = _context.Games;
+            switch (filter.ToLower())
+            {
+                case "played":
+                    gamesQuery = gamesQuery.Where(g => g.Watched);
+                    break;
+                case "not-played":
+                    gamesQuery = gamesQuery.Where(g => !g.Watched);
+                    break;
+                case "all":
+                default:
+                    break;
+            }
 
+            var values = gamesQuery.ToList();
+            ViewBag.totalPage = values.Count; 
+
+            return View(values);
         }
         public async Task<IActionResult> DeleteGame(int id)
         {
@@ -30,7 +43,8 @@ namespace RapidApiProject.Controllers
                 _context.Games.Remove(value);
                 await _context.SaveChangesAsync();
             }
-            return RedirectToAction("Index");
+            return RedirectToAction("Index", "Game");
+
         }
     }
 }
