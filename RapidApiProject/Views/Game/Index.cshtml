@@ -3,10 +3,9 @@
     Layout = null;
     int pageSize = 8;
     int currentPage = Context.Request.Query.ContainsKey("page") ? int.Parse(Context.Request.Query["page"]) : 1;
-    // Mevcut filtreyi sorgu dizesinden al, yoksa "all" varsayılanını kullan
     string currentFilter = Context.Request.Query.ContainsKey("filter") ? Context.Request.Query["filter"].ToString() : "all";
 
-    int totalGames = (int)ViewBag.totalPage; // Toplam oyun sayısı, filtrelenmiş liste için
+    int totalGames = (int)ViewBag.totalPage;
     int totalPages = (int)Math.Ceiling((double)totalGames / pageSize);
     var paginatedGames = Model.Skip((currentPage - 1) * pageSize).Take(pageSize).ToList();
 }

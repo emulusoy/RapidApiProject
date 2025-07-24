@@ -3,6 +3,8 @@
     Layout = null;
     int pageSize = 8;
     int currentPage = Context.Request.Query.ContainsKey("page") ? int.Parse(Context.Request.Query["page"]) : 1;
+    string currentFilter = Context.Request.Query.ContainsKey("filter") ? Context.Request.Query["filter"].ToString() : "all";
+
     int totalMovies = (int)ViewBag.totalPage;
     int totalPages = (int)Math.Ceiling((double)totalMovies / pageSize);
     var paginatedMovies = Model.Skip((currentPage - 1) * pageSize).Take(pageSize).ToList();
@@ -31,6 +33,13 @@
     </div>
 
     <h1 class="titlePage">|List - Movies|</h1>
+
+    <div class="filter-options" style="text-align: center; margin-bottom: 20px;">
+        <a href="?filter=all" class="filter-link @(currentFilter == "all" ? "active-filter" : "")">All Movie</a> |
+        <a href="?filter=watched" class="filter-link @(currentFilter == "watched" ? "active-filter" : "")">Watched Movie</a> |
+        <a href="?filter=not-watched" class="filter-link @(currentFilter == "not-watched" ? "active-filter" : "")">Not Watched Movie</a>
+    </div>
+
     <div class="movie-list">
         @foreach (var movie in paginatedMovies)
         {

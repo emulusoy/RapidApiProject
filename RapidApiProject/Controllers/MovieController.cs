@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using RapidApiProject.Context;
+using RapidApiProject.Entities;
 using RapidApiProject.Models;
 
 namespace RapidApiProject.Controllers
@@ -15,12 +16,26 @@ namespace RapidApiProject.Controllers
             _context = context;
         }
 
-        public async Task<IActionResult> Index()
+        public IActionResult Index(string filter = "all")
         {
-            var values = _context.Movies.ToList(); 
-            ViewBag.totalPage = values.Count;
-            return View(values);
+            IQueryable<Movie> moviesQuery = _context.Movies;
+            switch (filter.ToLower())
+            {
+                case "watched":
+                    moviesQuery = moviesQuery.Where(g => g.Watched);
+                    break;
+                case "not-watched":
+                    moviesQuery = moviesQuery.Where(g => !g.Watched);
+                    break;
+                case "all":
+                default:
+                    break;
+            }
 
+            var values = moviesQuery.ToList();
+            ViewBag.totalPage = values.Count;
+
+            return View(values);
         }
         public async Task<IActionResult> DeleteMovie(int id)
         {
