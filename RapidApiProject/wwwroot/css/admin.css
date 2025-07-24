@@ -1,0 +1,474 @@
+﻿/* --- Admin Layout Structure (önceki kodlar aynı kalmalı) --- */
+.admin-layout-container {
+    display: flex;
+    max-width: 1400px;
+    margin: 40px auto;
+    padding: 0 20px;
+    gap: 30px;
+    min-height: calc(100vh - 180px);
+}
+
+.admin-sidebar {
+    width: 250px;
+    flex-shrink: 0;
+    background: #1e1e1e;
+    border-radius: 12px;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.7);
+    padding: 20px 0;
+    height: fit-content;
+    position: sticky;
+    top: 100px;
+}
+
+.admin-sidebar-nav {
+    display: flex;
+    flex-direction: column;
+}
+
+.admin-nav-item {
+    display: flex;
+    align-items: center;
+    padding: 15px 25px;
+    color: #bbb;
+    text-decoration: none;
+    font-size: 1.1rem;
+    font-weight: 500;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+    .admin-nav-item i {
+        margin-right: 15px;
+        font-size: 1.3rem;
+        color: #ff6f61;
+    }
+
+    .admin-nav-item:hover {
+        background-color: #2a2a2a;
+        color: #fff;
+    }
+
+    .admin-nav-item.active {
+        background-color: #333;
+        color: #ff6f61;
+        font-weight: 700;
+        border-left: 5px solid #ff6f61;
+        padding-left: 20px;
+    }
+
+.sidebar-divider {
+    border-top: 1px solid #333;
+    margin: 15px 25px;
+}
+
+.admin-main-content {
+    flex-grow: 1;
+    background: #1e1e1e;
+    border-radius: 12px;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.7);
+    padding: 30px;
+}
+
+.content-header {
+    margin-bottom: 30px;
+    border-bottom: 1px solid #333;
+    padding-bottom: 20px;
+}
+
+    .content-header h2 {
+        color: #ff6f61;
+        font-size: 2.2rem;
+        margin-bottom: 10px;
+    }
+
+    .content-header p {
+        color: #bbb;
+        font-size: 1.1rem;
+    }
+
+/* Dashboard Widget'ları (Ana içerik alanı için örnekler) */
+.dashboard-widgets-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 25px;
+    margin-bottom: 40px;
+}
+
+.widget-card {
+    background: #2a2a2a;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+    .widget-card h3 {
+        color: #ff6f61;
+        font-size: 1.3rem;
+        margin-bottom: 10px;
+    }
+
+    .widget-card .widget-value {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: #fff;
+        margin-bottom: 15px;
+    }
+
+    .widget-card .widget-link {
+        display: flex;
+        align-items: center;
+        color: #007bff;
+        text-decoration: none;
+        font-weight: 600;
+        transition: color 0.3s ease;
+    }
+
+        .widget-card .widget-link:hover {
+            color: #0056b3;
+        }
+
+        .widget-card .widget-link i {
+            margin-left: 8px;
+            font-size: 1rem;
+        }
+
+/* Progress Bar */
+.progress-bar-container {
+    background-color: #333;
+    border-radius: 5px;
+    height: 20px;
+    overflow: hidden;
+    position: relative;
+    margin-top: 10px;
+}
+
+.progress-bar {
+    background-color: #4CAF50;
+    height: 100%;
+    border-radius: 5px;
+    width: 0%;
+}
+
+.progress-bar-container span {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-size: 0.9rem;
+    font-weight: bold;
+}
+
+.admin-action-area {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px dashed #333;
+}
+
+.add-new-button {
+    display: inline-flex;
+    align-items: center;
+    background-color: #4CAF50;
+    color: white;
+    padding: 12px 25px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 1rem;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.4);
+}
+
+    .add-new-button:hover {
+        background-color: #45a049;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 12px rgba(0, 0, 0, 0.6);
+    }
+
+    .add-new-button i {
+        margin-left: 8px;
+    }
+
+/* --- Grafiksel Öğeler (Güncellenmiş) --- */
+.chart-section {
+    background: #2a2a2a;
+    border-radius: 10px;
+    padding: 25px; /* Padding'i artırıyoruz */
+    margin-bottom: 30px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+    display: flex; /* İçeriği merkezlemek için flexbox */
+    flex-direction: column; /* Dikey sıralama */
+    align-items: center; /* Yatayda merkezleme */
+}
+
+    .chart-section h3 {
+        color: #ff6f61;
+        margin-bottom: 25px; /* Başlık ve grafik arası boşluğu artır */
+        font-size: 1.5rem; /* Başlık fontunu büyüt */
+    }
+
+/* Pie Chart (Güncellenmiş) */
+.pie-chart-container {
+    position: relative;
+    width: 250px; /* Genişliği artırıldı */
+    height: 250px; /* Yüksekliği artırıldı */
+    border-radius: 50%;
+    margin: 20px auto;
+    background-color: #333;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: inset 0 0 15px rgba(0,0,0,0.5); /* İç gölge */
+    border: 5px solid #1e1e1e; /* Kenarlık ekle */
+}
+
+.pie-segment {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    /* clip-path ve transform değerleri JavaScript ile dinamik olarak ayarlanmalı */
+    /* Şu anki statik değerler, sadece görsel bir temsil sunar */
+}
+
+    .pie-segment span {
+        position: absolute;
+        color: #eee;
+        font-size: 0.9rem; /* Metin boyutunu artır */
+        font-weight: bold;
+        text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.9);
+        /* Transform ve opacity JavaScript ile yönetilmeli */
+    }
+
+/* Bu kısım JavaScript olmadan görsel temsil için sadece */
+/* Gerçek bir pie chart kütüphanesi (Chart.js vb.) kullanmak çok daha iyi olacaktır. */
+.pie-chart-container .pie-segment:nth-child(1) {
+    background-color: #ff6f61; /* Movies */
+    clip-path: polygon(50% 50%, 50% 0, 95% 25%, 50% 50%); /* Örnek dilim */
+    transform: rotate(-10deg); /* Manuel pozisyonlama */
+}
+
+    .pie-chart-container .pie-segment:nth-child(1) span {
+        top: 20%;
+        left: 75%;
+        transform: translate(-50%, -50%);
+        opacity: 1;
+    }
+
+.pie-chart-container .pie-segment:nth-child(2) {
+    background-color: #007bff; /* Series */
+    clip-path: polygon(50% 50%, 95% 25%, 85% 75%, 50% 50%); /* Örnek dilim */
+    transform: rotate(60deg);
+}
+
+    .pie-chart-container .pie-segment:nth-child(2) span {
+        top: 55%;
+        left: 85%;
+        transform: translate(-50%, -50%);
+        opacity: 1;
+    }
+
+.pie-chart-container .pie-segment:nth-child(3) {
+    background-color: #4CAF50; /* Games */
+    clip-path: polygon(50% 50%, 85% 75%, 15% 75%, 50% 50%); /* Örnek dilim */
+    transform: rotate(170deg);
+}
+
+    .pie-chart-container .pie-segment:nth-child(3) span {
+        top: 80%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        opacity: 1;
+    }
+/* Pie chart açıklamaları için legend ekleyebiliriz */
+.pie-chart-legend {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    gap: 25px;
+    font-size: 0.95rem;
+    color: #bbb;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+}
+
+.legend-color-box {
+    width: 15px;
+    height: 15px;
+    border-radius: 3px;
+    margin-right: 8px;
+}
+
+
+/* Bar Chart (Güncellenmiş) */
+.bar-chart-container {
+    display: flex;
+    align-items: flex-end; /* Çubukları aşağıdan hizala */
+    gap: 20px; /* Çubuklar arası boşluğu artır */
+    padding: 30px 20px; /* İç boşluğu artır */
+    background-color: #333;
+    border-radius: 8px;
+    margin-top: 20px;
+    height: 300px; /* Grafiğin genel yüksekliğini artır */
+    box-shadow: inset 0 0 10px rgba(0,0,0,0.3); /* İç gölge */
+    position: relative; /* İçindeki çubukların konumlanması için */
+    align-items: flex-end; /* Çubukları aşağıya sabitle */
+    border-bottom: 2px solid #555; /* Taban çizgisi */
+}
+
+.bar {
+    background-color: #007bff;
+    color: white;
+    padding: 5px 0; /* İç padding'i ayarla */
+    border-radius: 5px 5px 0 0;
+    text-align: center;
+    flex-grow: 1; /* Esnek büyüme */
+    max-width: 100px; /* Çubukların maksimum genişliği */
+    min-width: 40px; /* Çubukların minimum genişliği */
+    height: var(--bar-height, 50%); /* Dinamik yükseklik için CSS değişkeni */
+    display: flex;
+    align-items: flex-end; /* İçindeki metni çubuğun altına hizala */
+    justify-content: center;
+    font-size: 0.9rem;
+    font-weight: bold;
+    transition: height 0.5s ease-out; /* Animasyon */
+    box-shadow: 0 -3px 8px rgba(0,0,0,0.3); /* Çubuklara gölge */
+    position: relative;
+    cursor: pointer;
+}
+
+    .bar:hover {
+        filter: brightness(1.2); /* Hover efekti */
+    }
+
+    .bar::before {
+        content: attr(data-label); /* data-label'dan etiket */
+        position: absolute;
+        bottom: -25px; /* Çubuğun altına yerleştir */
+        font-size: 0.85rem;
+        color: #bbb;
+        white-space: nowrap;
+    }
+    /* Çubuklar için örnek yükseklikler (HTML'deki style="..." ile de verilebilir) */
+    .bar:nth-child(1) {
+        --bar-height: 60%;
+        background-color: #ff6f61;
+    }
+
+    .bar:nth-child(2) {
+        --bar-height: 80%;
+        background-color: #007bff;
+    }
+
+    .bar:nth-child(3) {
+        --bar-height: 70%;
+        background-color: #4CAF50;
+    }
+
+    .bar:nth-child(4) {
+        --bar-height: 90%;
+        background-color: #ff6f61;
+    }
+
+    .bar:nth-child(5) {
+        --bar-height: 75%;
+        background-color: #007bff;
+    }
+
+    .bar:nth-child(6) {
+        --bar-height: 85%;
+        background-color: #4CAF50;
+    }
+
+
+.bar-chart-labels { /* Bu etiket bölümünü kaldırıp, etiketleri bar::before ile yapıştırdık */
+    display: none;
+}
+
+
+/* Responsive Düzenlemeler (önceki kodlar aynı kalmalı veya ayarlanmalı) */
+@media (max-width: 992px) {
+    .admin-layout-container {
+        flex-direction: column;
+        gap: 20px;
+        padding: 0 15px;
+    }
+
+    .admin-sidebar {
+        width: 100%;
+        position: static;
+        top: auto;
+        padding: 15px 0;
+    }
+
+    .admin-sidebar-nav {
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 5px;
+    }
+
+    .admin-nav-item {
+        padding: 10px 15px;
+        border-left: none;
+    }
+
+        .admin-nav-item.active {
+            border-bottom: 3px solid #ff6f61;
+            border-left: none;
+            padding-bottom: 7px;
+            padding-left: 15px;
+        }
+
+    .sidebar-divider {
+        display: none;
+    }
+
+    .admin-main-content {
+        padding: 20px;
+    }
+
+    .dashboard-widgets-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .admin-action-area {
+        flex-direction: column;
+    }
+
+    /* Grafik responsive ayarlamaları */
+    .pie-chart-container {
+        width: 200px; /* Daha küçük ekranlarda küçült */
+        height: 200px;
+    }
+
+    .pie-segment span {
+        font-size: 0.8rem;
+    }
+
+    .bar-chart-container {
+        height: 200px; /* Çubuk grafiği yüksekliğini küçült */
+        gap: 10px;
+        padding: 15px 10px;
+    }
+
+    .bar {
+        font-size: 0.7rem;
+        min-width: 30px;
+    }
+
+        .bar::before {
+            font-size: 0.75rem;
+            bottom: -20px;
+        }
+}
