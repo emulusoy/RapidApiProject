@@ -1,7 +1,7 @@
 
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: #121212;
+    background: white !important;
     color: #eee;
     margin: 0;
     padding: 0;
@@ -240,6 +240,3 @@ h1 {
         border: 1px solid #ff6f61;
         font-weight: bold;
     }
-
-
-    

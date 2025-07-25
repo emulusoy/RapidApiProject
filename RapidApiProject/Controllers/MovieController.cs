@@ -15,7 +15,6 @@ namespace RapidApiProject.Controllers
         {
             _context = context;
         }
-
         public IActionResult Index(string filter = "all")
         {
             IQueryable<Movie> moviesQuery = _context.Movies;
@@ -37,6 +36,14 @@ namespace RapidApiProject.Controllers
 
             return View(values);
         }
+        public IActionResult _FilterOptions()
+        {
+            return View();
+        }
+        public IActionResult _MovieCard()
+        {
+            return View();
+        }
         public async Task<IActionResult> DeleteMovie(int id)
         {
             var value = _context.Movies.Find(id);
@@ -48,5 +55,7 @@ namespace RapidApiProject.Controllers
             }
             return RedirectToAction("Index");
         }
+        
+        
     }
 }

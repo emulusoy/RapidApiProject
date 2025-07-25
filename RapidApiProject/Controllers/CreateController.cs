@@ -35,7 +35,7 @@ namespace RapidApiProject.Controllers
                         {
                             Title = model.Title,
                             Image = model.Image,
-                            Rating = model.Rating,
+                            Rating =double.Parse(model.Rating),
                             Description = model.Description,
                             Watched = model.Watched
                         };

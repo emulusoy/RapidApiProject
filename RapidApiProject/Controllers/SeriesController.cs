@@ -19,6 +19,10 @@ namespace RapidApiProject.Controllers
             return View(values);
 
         }
+        public IActionResult _SeriesCard()
+        {
+            return View();
+        }
         public async Task<IActionResult> DeleteSeries(int id)
         {
             var value = _context.Series.Find(id);

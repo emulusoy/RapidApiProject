@@ -1,0 +1,7 @@
+﻿@model string
+
+<div class="filter-options" style="text-align: center; margin-bottom: 20px;">
+    <a href="?filter=all" class="filter-link @(Model == "all" ? "active-filter" : "")">All</a> |
+    <a href="?filter=watched" class="filter-link @(Model == "watched" ? "active-filter" : "")">Watched</a> |
+    <a href="?filter=not-watched" class="filter-link @(Model == "not-watched" ? "active-filter" : "")">Not Watched</a>
+</div>

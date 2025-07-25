@@ -18,10 +18,10 @@ namespace RapidApiProject.Controllers
             IQueryable<Game> gamesQuery = _context.Games;
             switch (filter.ToLower())
             {
-                case "played":
+                case "watched":
                     gamesQuery = gamesQuery.Where(g => g.Watched);
                     break;
-                case "not-played":
+                case "not-watched":
                     gamesQuery = gamesQuery.Where(g => !g.Watched);
                     break;
                 case "all":
@@ -33,6 +33,10 @@ namespace RapidApiProject.Controllers
             ViewBag.totalPage = values.Count; 
 
             return View(values);
+        }
+        public IActionResult _GamesCard()
+        {
+            return View();
         }
         public async Task<IActionResult> DeleteGame(int id)
         {
