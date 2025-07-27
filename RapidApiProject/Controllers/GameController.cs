@@ -28,10 +28,21 @@ namespace RapidApiProject.Controllers
                 default:
                     break;
             }
-
+            if (filter == "rating")
+            {
+                gamesQuery = gamesQuery.OrderByDescending(m => m.Rating);
+            }
+            else
+            {
+                gamesQuery = gamesQuery.OrderByDescending(m => m.ID);
+            }
+            if (filter == "raiting-Not-Watched")
+            {
+                gamesQuery = gamesQuery.Where(x => !x.Watched).OrderByDescending(y => y.Rating);
+            }
             var values = gamesQuery.ToList();
-            ViewBag.totalPage = values.Count; 
-
+            ViewBag.totalPage = values.Count;
+            ViewBag.Filter = filter;
             return View(values);
         }
         public IActionResult _GamesCard()

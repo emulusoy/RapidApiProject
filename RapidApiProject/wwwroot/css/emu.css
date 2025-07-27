@@ -1,7 +1,7 @@
 
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: #3b3434 !important;
+    background: #AEB1BF !important;
     color: #eee;
     margin: 0;
     padding: 0;
@@ -103,7 +103,7 @@ h1 {
 }
 
 .movie-rating {
-    background: #ff6f61;
+    background: #ff0000;
     padding: 5px 10px;
     border-radius: 20px;
     font-weight: 600;
@@ -222,16 +222,16 @@ h1 {
     margin-bottom: 20px;
 }
 .filter-link {
-    color: #ff6f61;
+    color: #202866;
     padding: 8px 15px;
     text-decoration: none;
-    border: 1px solid #ff6f61;
+    border: 1px solid #3A3D4A;
     border-radius: 5px;
     margin: 0 5px;
     transition: background-color 0.3s, color 0.3s;
 }
-.filter-link:hover {
-        background-color: #333;
+    .filter-link:hover {
+        background-color: #8B8C88;
     }
 
     .filter-link.active-filter {

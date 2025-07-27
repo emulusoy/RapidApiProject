@@ -36,7 +36,11 @@ namespace RapidApiProject.Controllers
             }
             else
             {
-                moviesQuery = moviesQuery.OrderByDescending(m => m.ID); // default sıralama
+                moviesQuery = moviesQuery.OrderByDescending(m => m.ID); 
+            }
+            if (filter=="raiting-Not-Watched")
+            {
+                moviesQuery = moviesQuery.Where(x => !x.Watched).OrderByDescending(y => y.Rating);
             }
             var values = moviesQuery.ToList();
             ViewBag.totalPage = values.Count;
