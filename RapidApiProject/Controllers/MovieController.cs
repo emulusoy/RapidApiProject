@@ -30,10 +30,17 @@ namespace RapidApiProject.Controllers
                 default:
                     break;
             }
-
+            if (filter == "rating")
+            {
+                moviesQuery = moviesQuery.OrderByDescending(m => m.Rating);
+            }
+            else
+            {
+                moviesQuery = moviesQuery.OrderByDescending(m => m.ID); // default sıralama
+            }
             var values = moviesQuery.ToList();
             ViewBag.totalPage = values.Count;
-
+            ViewBag.Filter = filter;
             return View(values);
         }
         public IActionResult _FilterOptions()
