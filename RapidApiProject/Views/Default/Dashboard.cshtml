@@ -1,3 +1,74 @@
-﻿<div class="container">
-	<h3 class="text-center">MUSTAFA ULUSOY DEV</h3>
-</div>
+﻿<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Görev/Not Uygulaması</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="app-header">
+            <h1 id="appTitle">Yapılacaklar & Notlar</h1>
+            <button id="editTitleBtn" class="action-button edit-button">Düzenle</button>
+        </header>
+
+        <main class="content-area">
+            <div class="task-list-section">
+                <ul class="task-list" id="taskList">
+                    <li class="task-item active" data-id="1">
+                        <span class="task-number">1</span>
+                        <span class="task-text">Önemli Toplantı Hazırlığı</span>
+                    </li>
+                    <li class="task-item" data-id="2">
+                        <span class="task-number">2</span>
+                        <span class="task-text">Müşteri Arayışları</span>
+                    </li>
+                    <li class="task-item" data-id="3">
+                        <span class="task-number">3</span>
+                        <span class="task-text">Proje Raporunu Tamamla</span>
+                    </li>
+                    <li>
+
+
+                    </li>
+                </ul>
+                <div class="sub-tasks">
+                    <div class="sub-task-item">
+                        <input type="checkbox" id="subTask1" checked>
+                        <label for="subTask1">iş bir</label>
+                    </div>
+                    <div class="sub-task-item">
+                        <input type="checkbox" id="subTask2">
+                        <label for="subTask2">iş iki</label>
+                    </div>
+                    <div class="sub-task-item">
+                        <input type="checkbox" id="subTask3">
+                        <label for="subTask3">iş üç</label>
+                    </div>
+                </div>
+                <ul class="task-list" id="taskList">
+                    <li class="task-item">
+                <button id="addNewTaskBtn" class="action-button add-button">+</button>
+                <button id="editActiveTaskBtn" class="action-button edit-task-list-button"><i class="fas fa-edit"></i></button>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="note-section">
+                <div class="note-header">
+                    <h2 id="noteTitle">NOT KISMI</h2>
+                    <span class="date-display" id="currentDate">TARİH: 2025-07-30</span>
+                </div>
+                <textarea class="note-textarea" id="noteContent" placeholder="Buraya notunuzu yazın..."></textarea>
+            </div>
+        </main>
+
+        <footer class="app-footer">
+            <p>eMu &copy; 2025 <a target="_blank">emu linkedin!</a></p>
+        </footer>
+    </div>
+
+    <script src="/js/script.js"></script>
+</body>
+</html>

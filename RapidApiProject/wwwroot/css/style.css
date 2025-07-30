@@ -1,0 +1,343 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #F4F6F6; /* Açýk gri arka plan */
+    color: #333; /* Koyu gri metin rengi */
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start; /* Ýçeriði yukarý hizala */
+    min-height: 100vh;
+    box-sizing: border-box; /* Padding'in geniþliðe dahil olmasýný saðlar */
+}
+
+.container {
+    background-color: #FFFFFF; /* Beyaz içerik kutusu */
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 1000px; /* Maksimum geniþlik, taslaða uygun */
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    box-sizing: border-box;
+}
+
+.app-header {
+    text-align: center;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #E0E0E0; /* Alt çizgi */
+    margin-bottom: 20px;
+    position: relative; /* Buton konumlandýrma için */
+}
+
+    .app-header h1 {
+        color: #5A8DDC; /* Mavi baþlýk */
+        margin: 0;
+        font-size: 2.2rem;
+        font-weight: 600;
+    }
+
+/* Uygulama Baþlýðý Düzenle Butonu Stili */
+.app-title-edit-button { /* Yeni özel sýnýf */
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    padding: 8px 15px;
+    background-color: #88B04B; /* Yeþil ton */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9em;
+    transition: background-color 0.3s ease;
+}
+
+    .app-title-edit-button:hover {
+        background-color: #6C8E3C; /* Koyu yeþil */
+    }
+
+
+.content-area {
+    display: flex;
+    gap: 30px; /* Bölümler arasý boþluk */
+    flex-wrap: wrap; /* Küçük ekranlarda alt alta geçiþ */
+}
+
+.task-list-section {
+    flex: 1; /* Esnek boyutlandýrma */
+    min-width: 300px; /* Minimum geniþlik */
+    border: 1px solid #E0E0E0;
+    border-radius: 8px;
+    padding: 20px;
+    background-color: #FDFDFD;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    position: relative; /* + ve Düzenle butonu için */
+    padding-bottom: 70px; /* Butonlar için boþluk */
+}
+
+.task-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    max-height: 400px; /* Liste için maksimum yükseklik */
+    overflow-y: auto; /* Dikey scrollbar */
+}
+
+.task-item {
+    display: flex;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px dashed #E9E9E9; /* Noktalý ayýrýcý */
+    cursor: pointer; /* Týklanabilir olduðunu belirtir */
+    transition: background-color 0.2s ease, transform 0.2s ease;
+    /* position: relative;  Eðer her satýrda buton olmayacaksa gerek yok */
+    /* padding-right: 40px; Eðer her satýrda buton olmayacaksa gerek yok */
+}
+
+    .task-item:last-child {
+        border-bottom: none; /* Son öðede ayýrýcý olmasýn */
+    }
+
+    .task-item:hover {
+        background-color: #E9F0F8; /* Hover rengi */
+        transform: translateX(3px); /* Hafif kayma efekti */
+    }
+
+    .task-item.active {
+        background-color: #DDE7F6; /* Aktif öðe vurgusu */
+        border-left: 5px solid #5A8DDC; /* Sol kenarlýk vurgusu */
+        padding-left: 15px; /* Kenarlýk eklenince boþluðu ayarla */
+    }
+
+.task-number {
+    background-color: #5A8DDC; /* Mavi numara arka planý */
+    color: white;
+    font-weight: bold;
+    border-radius: 50%; /* Yuvarlak þekil */
+    width: 28px;
+    height: 28px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 0.9em;
+    margin-right: 15px;
+    flex-shrink: 0; /* Küçülmesini engelle */
+}
+
+.task-text {
+    font-size: 1.1em;
+    color: #3B6CA8; /* Daha koyu mavi metin */
+    font-weight: 500;
+    flex-grow: 1; /* Metnin kalan alaný doldurmasýný saðlar */
+}
+
+/* Her satýrdaki kalem ikonu için tanýmlanmýþ bu sýnýf kaldýrýldý:
+.edit-task-btn {
+    position: absolute;
+    right: 5px;
+    background: none;
+    border: none;
+    color: #777;
+    font-size: 1.1em;
+    cursor: pointer;
+    padding: 5px;
+    transition: color 0.2s ease;
+}
+
+.edit-task-btn:hover {
+    color: #5A8DDC;
+}
+*/
+
+.sub-tasks {
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px solid #E0E0E0;
+}
+
+.sub-task-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+    .sub-task-item input[type="checkbox"] {
+        margin-right: 10px;
+        width: 18px;
+        height: 18px;
+        accent-color: #5A8DDC; /* Checkbox rengi */
+    }
+
+    .sub-task-item label {
+        font-size: 1em;
+        color: #555;
+        cursor: pointer;
+    }
+
+    .sub-task-item input[type="checkbox"]:checked + label {
+        text-decoration: line-through; /* Üstü çizili */
+        color: #888;
+    }
+
+/* + ve Düzenle Butonlarýnýn Ýçeren Kapsayýcý */
+.task-list-actions {
+    position: absolute;
+    bottom: 20px;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    gap: 15px; /* Butonlar arasý boþluk */
+}
+
+/* + Buton Stili */
+.add-button {
+    width: 45px; /* Biraz daha geniþ */
+    height: 45px; /* Biraz daha yüksek */
+    border-radius: 50%;
+    background-color: #5A8DDC; /* Mavi */
+    color: white;
+    font-size: 2em; /* Ýkon boyutu */
+    border: none;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+    .add-button:hover {
+        background-color: #3B6CA8; /* Koyu mavi */
+        transform: scale(1.05);
+    }
+
+/* Liste öðesi düzenleme butonu (kalem ikonu) - eskiden bu isimdeydi, þimdi ana butonun yanýndaki buton */
+.action-button.edit-task-list-button { /* Yeni sýnýf */
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    background-color: #88B04B; /* Yeþil ton */
+    color: white;
+    font-size: 1.2em; /* Ýkon boyutu */
+    border: none;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+    .action-button.edit-task-list-button:hover {
+        background-color: #6C8E3C; /* Koyu yeþil */
+        transform: scale(1.05);
+    }
+
+.note-section {
+    flex: 2; /* Diðer bölümden daha geniþ */
+    min-width: 400px; /* Minimum geniþlik */
+    border: 1px solid #E0E0E0;
+    border-radius: 8px;
+    padding: 20px;
+    background-color: #FDFDFD;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    display: flex;
+    flex-direction: column;
+}
+
+.note-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px dashed #E9E9E9;
+}
+
+    .note-header h2 {
+        color: #5A8DDC; /* Mavi baþlýk */
+        margin: 0;
+        font-size: 1.5rem;
+        font-weight: 600;
+    }
+
+.date-display {
+    color: #777;
+    font-size: 0.9em;
+    font-weight: 500;
+}
+
+.note-textarea {
+    width: 100%;
+    flex-grow: 1; /* Kalan alaný doldur */
+    min-height: 200px; /* Minimum yükseklik */
+    padding: 15px;
+    border: 1px solid #D0D0D0;
+    border-radius: 6px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 1em;
+    color: #444;
+    resize: vertical; /* Sadece dikeyde boyutlandýrma */
+    box-sizing: border-box; /* Padding'in geniþliðe dahil olmasýný saðlar */
+}
+
+    .note-textarea::placeholder {
+        color: #A0A0A0;
+    }
+
+    .note-textarea:focus {
+        outline: none;
+        border-color: #3B6CA8; /* Odaklandýðýnda kenarlýk rengi */
+        box-shadow: 0 0 5px rgba(90, 141, 220, 0.3);
+    }
+
+.app-footer {
+    text-align: center;
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid #E0E0E0;
+    color: #888;
+    font-size: 0.9em;
+}
+
+    .app-footer a {
+        color: #5A8DDC;
+        text-decoration: none;
+    }
+
+        .app-footer a:hover {
+            text-decoration: underline;
+        }
+
+/* Responsive Düzenlemeler */
+@media (max-width: 768px) {
+    .content-area {
+        flex-direction: column; /* Küçük ekranlarda dikey düzen */
+    }
+
+    .task-list-section,
+    .note-section {
+        min-width: auto; /* Minimum geniþliði kaldýr */
+        width: 100%; /* Tam geniþlik */
+    }
+
+    .app-title-edit-button {
+        position: static; /* Küçük ekranlarda konumlandýrmayý resetle */
+        transform: none;
+        margin-top: 15px;
+        width: 100%; /* Tam geniþlik */
+    }
+
+    .task-list-actions {
+        position: static; /* Küçük ekranlarda butonlarý statik yap */
+        margin-top: 20px;
+        flex-direction: row; /* Butonlarý yan yana tut */
+        justify-content: center;
+        width: 100%;
+        transform: none; /* translateX'i kaldýr */
+    }
+}
