@@ -49,7 +49,7 @@ namespace RapidApiProject.Controllers
         {
             return View();
         }
-        public async Task<IActionResult> DeleteSeries(int id)
+        public async Task<IActionResult> DeleteSeries(int id, string returnUrl = null)
         {
             var value = _context.Series.Find(id);
             ViewBag.totalPage = _context.Series.Count();
@@ -57,6 +57,10 @@ namespace RapidApiProject.Controllers
             {
                 _context.Series.Remove(value);
                 await _context.SaveChangesAsync();
+            }
+            if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
+            {
+                return Redirect(returnUrl);
             }
             return RedirectToAction("Index");
         }

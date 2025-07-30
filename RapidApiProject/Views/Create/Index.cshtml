@@ -1,6 +1,6 @@
 ﻿@model CreateViewModel
 @{
-    Layout = null;
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <!DOCTYPE html>
 <html lang="tr">
@@ -8,17 +8,9 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Yeni Öğe Oluştur</title>
-	<link href="/css/emucreate.css" rel="stylesheet" />
+	<link href="/css/emu.css" rel="stylesheet" />
 </head>
 <body>
-    <div class="navbar">
-        <div class="navbar-links">
-            <a href="/Movie/Index/" class="navbar-brand @(ViewContext.RouteData.Values["controller"].ToString() == "Movie" ? "active-nav-link" : "")">Movies</a>
-            <a href="/Series/Index/" class="navbar-brand @(ViewContext.RouteData.Values["controller"].ToString() == "Series" ? "active-nav-link" : "")">Series</a>
-            <a href="/Game/Index/" class="navbar-brand @(ViewContext.RouteData.Values["controller"].ToString() == "Game" ? "active-nav-link" : "")">Games</a>
-            <a href="/Create/Index/" class="navbar-brand @(ViewContext.RouteData.Values["controller"].ToString() == "Create" ? "active-nav-link" : "")">Create</a>
-        </div>
-    </div>
 
     <div class="container">
         <h1>Yeni Öğe Ekle</h1>

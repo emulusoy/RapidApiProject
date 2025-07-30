@@ -55,7 +55,7 @@ namespace RapidApiProject.Controllers
         {
             return View();
         }
-        public async Task<IActionResult> DeleteMovie(int id)
+        public async Task<IActionResult> DeleteMovie(int id,string returnUrl = null)
         {
             var value = _context.Movies.Find(id);
             ViewBag.totalPage = _context.Movies.Count();
@@ -63,6 +63,10 @@ namespace RapidApiProject.Controllers
             {
                 _context.Movies.Remove(value);
                 await _context.SaveChangesAsync();
+            }
+            if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
+            {
+                return Redirect(returnUrl);
             }
             return RedirectToAction("Index");
         }

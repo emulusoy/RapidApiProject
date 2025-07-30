@@ -1,14 +1,19 @@
-
+/* --- Global ve Navbar Stilleri --- */
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: #AEB1BF !important;
-    color: #eee;
+    background: #1A202C !important; /* Yeni Ana Arka Plan */
+    color: #E2E8F0; /* Yeni Metin Rengi (Açýk) */
     margin: 0;
     padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    box-sizing: border-box;
 }
 
 .navbar {
-    background: #565555;
+    background: #242D3D; /* Yeni Navbar Arka Plan */
     padding: 15px 20px;
     box-shadow: 0 2px 5px rgba(0,0,0,0.5);
     display: flex;
@@ -18,17 +23,18 @@ body {
     position: sticky;
     top: 0;
     z-index: 1000;
+    width: 100%;
 }
 
 .navbar-brand {
-    color: #ff6f61;
+    color: #63B3ED; /* Yeni Vurgu Rengi 1 */
     font-size: 1.8rem;
     font-weight: 700;
     text-decoration: none;
 }
 
 .navbar-links a {
-    color: white;
+    color: #E2E8F0; /* Yeni Metin Rengi (Açýk) */
     text-decoration: none;
     margin-left: 25px;
     font-size: 1.3rem;
@@ -36,37 +42,38 @@ body {
 }
 
     .navbar-links a.active-nav-link {
-        color: #b8003f;
+        color: #F6AD55; /* Yeni Vurgu Rengi 2 */
         font-size: 1.3rem;
         text-decoration: underline;
         font-weight: 700;
     }
 
 .titlePage {
-    color: #b8003f;
+    color: #F6AD55; /* Yeni Vurgu Rengi 2 */
 }
 
 .navbar-links a:hover {
-    color: cadetblue;
+    color: #F6AD55; /* Yeni Vurgu Rengi 2 */
 }
 
 h1 {
     text-align: center;
-    margin: 40px 0 30px 0; /* Adjusted margin for spacing below navbar */
-    color: #ff6f61;
+    margin: 40px 0 30px 0;
+    color: #63B3ED; /* Yeni Vurgu Rengi 1 */
 }
 
+/* --- Movie/Series/Game List Stilleri --- */
 .movie-list {
     display: grid;
     grid-template-columns: repeat(auto-fit,minmax(280px,1fr));
     gap: 20px;
     max-width: 1200px;
     margin: 0 auto;
-    padding: 0 20px; /* Added horizontal padding for the list */
+    padding: 0 20px;
 }
 
 .movie-card {
-    background: #1e1e1e;
+    background: #2D3748; /* Yeni Ýkincil Arka Plan */
     border-radius: 10px;
     overflow: hidden;
     box-shadow: 0 4px 10px rgba(0,0,0,0.6);
@@ -85,8 +92,8 @@ h1 {
 
 .movie-content {
     padding: 15px;
-    position: relative; /* yeni eklendi */
-    padding-bottom: 60px; /* rating ve ikonlar için alan aç */
+    position: relative;
+    padding-bottom: 60px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -96,23 +103,23 @@ h1 {
 .movie-rank {
     font-weight: bold;
     font-size: 1.2rem;
-    color: #ff6f61;
+    color: #63B3ED; /* Yeni Vurgu Rengi 1 */
 }
 
 .movie-title {
     margin: 8px 0;
     font-size: 1.4rem;
     font-weight: 700;
-    color: #fff;
+    color: #E2E8F0; /* Yeni Metin Rengi (Açýk) */
 }
 
 .movie-rating {
-    background: #ff0000;
+    background: #FC8181; /* Yeni Hata Rengi */
     padding: 5px 10px;
     border-radius: 20px;
     font-weight: 600;
     width: fit-content;
-    color: white;
+    color: #1A202C; /* Arka plana uygun koyu metin */
     font-size: 1rem;
     position: absolute;
     bottom: 10px;
@@ -133,51 +140,51 @@ h1 {
     display: inline-block;
     margin-top: 10px;
     text-decoration: none;
-    color: #ff6f61;
+    color: #63B3ED; /* Yeni Vurgu Rengi 1 */
     font-weight: 600;
-    border: 1px solid #ff6f61;
+    border: 1px solid #63B3ED; /* Yeni Vurgu Rengi 1 */
     padding: 7px 14px;
     border-radius: 30px;
     transition: background 0.3s ease, color 0.3s ease;
 }
 
     .imdb-link:hover {
-        background: #ff6f61;
-        color: #121212;
+        background: #63B3ED; /* Yeni Vurgu Rengi 1 */
+        color: #1A202C; /* Yeni Ana Arka Plan (metin için) */
     }
 
 .pagination {
     display: flex;
     justify-content: center;
     margin-top: 40px;
-    padding-bottom: 30px; /* Added padding for spacing below pagination */
+    padding-bottom: 30px;
 }
 
     .pagination a {
-        color: #ff6f61;
+        color: #63B3ED; /* Yeni Vurgu Rengi 1 */
         padding: 10px 18px;
         text-decoration: none;
-        border: 1px solid #ff6f61;
+        border: 1px solid #63B3ED; /* Yeni Vurgu Rengi 1 */
         border-radius: 5px;
         margin: 0 5px;
         transition: background-color 0.3s, color 0.3s;
     }
 
         .pagination a:hover:not(.active) {
-            background-color: #333;
+            background-color: #4A5568; /* Yeni Kenarlýk/Ayýrýcý */
         }
 
         .pagination a.active {
-            background-color: #ff6f61;
+            background-color: #63B3ED; /* Yeni Vurgu Rengi 1 */
             color: white;
-            border: 1px solid #ff6f61;
+            border: 1px solid #63B3ED; /* Yeni Vurgu Rengi 1 */
         }
 
         .pagination a.disabled {
-            color: #555;
-            border-color: #555;
+            color: #A0AEC0; /* Yeni Metin Rengi (Koyu/Yardýmcý) */
+            border-color: #A0AEC0; /* Yeni Metin Rengi (Koyu/Yardýmcý) */
             cursor: not-allowed;
-            background-color: #222;
+            background-color: #2D3748; /* Yeni Ýkincil Arka Plan */
         }
 
 .watched-status {
@@ -195,14 +202,15 @@ h1 {
 }
 
     .watched-status.watched {
-        background-color: #4CAF50; 
-        color: white;
+        background-color: #48BB78; /* Yeni Baþarý Rengi */
+        color: #1A202C; /* Arka plana uygun koyu metin */
     }
 
     .watched-status.not-watched {
-        background-color: #f44336; 
-        color: white;
+        background-color: #FC8181; /* Yeni Hata Rengi */
+        color: #1A202C; /* Arka plana uygun koyu metin */
     }
+
 .watched-status-game {
     position: center;
     top: 10px;
@@ -216,43 +224,566 @@ h1 {
     z-index: 10;
     text-align: center;
 }
-.watched-status-game.played {
-    background-color: #4CAF50;
-    color: white;
-}
 
-.watched-status-game.not-played {
-    background-color: #f44336;
-    color: white;
-}
+    .watched-status-game.played {
+        background-color: #48BB78; /* Yeni Baþarý Rengi */
+        color: #1A202C;
+    }
+
+    .watched-status-game.not-played {
+        background-color: #FC8181; /* Yeni Hata Rengi */
+        color: #1A202C;
+    }
+
 .filter-options {
     margin-top: 20px;
     margin-bottom: 20px;
 }
+
 .filter-link {
-    color: #202866;
+    color: #63B3ED; /* Yeni Vurgu Rengi 1 */
     padding: 8px 15px;
     text-decoration: none;
-    border: 1px solid #3A3D4A;
+    border: 1px solid #4A5568; /* Yeni Kenarlýk/Ayýrýcý */
     border-radius: 5px;
     margin: 0 5px;
     transition: background-color 0.3s, color 0.3s;
 }
+
     .filter-link:hover {
-        background-color: #8B8C88;
+        background-color: #4A5568; /* Yeni Kenarlýk/Ayýrýcý */
     }
 
     .filter-link.active-filter {
-        background-color: #202866;
+        background-color: #63B3ED; /* Yeni Vurgu Rengi 1 */
         color: white;
         border: 1px solid white;
         font-weight: bold;
     }
+
 .edit-watch-btn svg {
     transition: 0.3s;
 }
 
 .edit-watch-btn:hover svg {
-    stroke: #0056b3;
+    stroke: #F6AD55; /* Yeni Vurgu Rengi 2 */
     transform: scale(1.1);
+}
+
+/* --- Görev/Not Uygulamasý Stilleri --- */
+.container {
+    background-color: #2D3748; /* Yeni Ýkincil Arka Plan */
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6);
+    width: 100%;
+    max-width: 900px;
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    box-sizing: border-box;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.app-header {
+    text-align: center;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #4A5568; /* Yeni Kenarlýk/Ayýrýcý */
+    margin-bottom: 20px;
+    position: relative;
+}
+
+    .app-header h1 {
+        color: #63B3ED; /* Yeni Vurgu Rengi 1 */
+        margin: 0;
+        font-size: 2.2rem;
+        font-weight: 700;
+    }
+
+.action-button.edit-button {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    padding: 8px 15px;
+    background-color: #48BB78; /* Yeni Baþarý Rengi */
+    color: #1A202C; /* Koyu metin */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9em;
+    transition: background-color 0.3s ease;
+}
+
+    .action-button.edit-button:hover {
+        background-color: #38A169; /* Baþarý Rengi'nin biraz koyusu */
+    }
+
+.content-area {
+    display: flex;
+    gap: 30px;
+    flex-wrap: wrap;
+}
+
+.task-list-section {
+    flex: 1;
+    min-width: 300px;
+    border: 1px solid #4A5568; /* Yeni Kenarlýk/Ayýrýcý */
+    border-radius: 8px;
+    padding: 20px;
+    background-color: #2D3748; /* Yeni Ýkincil Arka Plan */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+    position: relative;
+    padding-bottom: 70px;
+    color: #E2E8F0; /* Yeni Metin Rengi (Açýk) */
+}
+
+.task-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.task-item {
+    display: flex;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px dashed #4A5568; /* Yeni Kenarlýk/Ayýrýcý */
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+    color: #E2E8F0; /* Yeni Metin Rengi (Açýk) */
+}
+
+    .task-item:last-child {
+        border-bottom: none;
+    }
+
+    .task-item:hover {
+        background-color: #4A5568; /* Yeni Kenarlýk/Ayýrýcý */
+        transform: translateX(3px);
+    }
+
+    .task-item.active {
+        background-color: #4A5568; /* Yeni Kenarlýk/Ayýrýcý */
+        border-left: 5px solid #63B3ED; /* Yeni Vurgu Rengi 1 */
+        padding-left: 15px;
+    }
+
+.task-number {
+    background-color: #63B3ED; /* Yeni Vurgu Rengi 1 */
+    color: white;
+    font-weight: bold;
+    border-radius: 50%;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 0.9em;
+    margin-right: 15px;
+    flex-shrink: 0;
+}
+
+.task-text {
+    font-size: 1.1em;
+    color: #E2E8F0; /* Yeni Metin Rengi (Açýk) */
+    font-weight: 500;
+    flex-grow: 1;
+}
+
+.sub-tasks {
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px solid #4A5568; /* Yeni Kenarlýk/Ayýrýcý */
+    color: #E2E8F0; /* Yeni Metin Rengi (Açýk) */
+}
+
+.sub-task-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+    .sub-task-item input[type="checkbox"] {
+        margin-right: 10px;
+        width: 18px;
+        height: 18px;
+        accent-color: #63B3ED; /* Yeni Vurgu Rengi 1 */
+    }
+
+    .sub-task-item label {
+        font-size: 1em;
+        color: #E2E8F0; /* Yeni Metin Rengi (Açýk) */
+        cursor: pointer;
+    }
+
+    .sub-task-item input[type="checkbox"]:checked + label {
+        text-decoration: line-through;
+        color: #A0AEC0; /* Yeni Metin Rengi (Koyu/Yardýmcý) */
+    }
+
+.task-list li:last-child {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 20px;
+    padding-bottom: 0;
+    border-bottom: none;
+}
+
+.action-button.add-button {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    background-color: #63B3ED; /* Yeni Vurgu Rengi 1 */
+    color: white;
+    font-size: 2em;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+    .action-button.add-button:hover {
+        background-color: #F6AD55; /* Yeni Vurgu Rengi 2 */
+        transform: scale(1.05);
+    }
+
+.action-button.edit-task-list-button {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    background-color: #F6AD55; /* Yeni Vurgu Rengi 2 */
+    color: #1A202C; /* Arka plana uygun koyu metin */
+    font-size: 1.2em;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+    .action-button.edit-task-list-button:hover {
+        background-color: #63B3ED; /* Yeni Vurgu Rengi 1 */
+        transform: scale(1.05);
+    }
+
+.note-section {
+    flex: 2;
+    min-width: 400px;
+    border: 1px solid #4A5568; /* Yeni Kenarlýk/Ayýrýcý */
+    border-radius: 8px;
+    padding: 20px;
+    background-color: #2D3748; /* Yeni Ýkincil Arka Plan */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+    display: flex;
+    flex-direction: column;
+    color: #E2E8F0; /* Yeni Metin Rengi (Açýk) */
+}
+
+.note-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px dashed #4A5568; /* Yeni Kenarlýk/Ayýrýcý */
+}
+
+    .note-header h2 {
+        color: #63B3ED; /* Yeni Vurgu Rengi 1 */
+        margin: 0;
+        font-size: 1.5rem;
+        font-weight: 700;
+    }
+
+.date-display {
+    color: #A0AEC0; /* Yeni Metin Rengi (Koyu/Yardýmcý) */
+    font-size: 0.9em;
+    font-weight: 500;
+}
+
+.note-textarea {
+    width: 100%;
+    flex-grow: 1;
+    min-height: 200px;
+    padding: 15px;
+    border: 1px solid #242D3D; /* Navbar Arka Planýna yakýn */
+    border-radius: 6px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 1em;
+    color: #E2E8F0; /* Yeni Metin Rengi (Açýk) */
+    background-color: #212936; /* Daha koyu arka plan */
+    resize: vertical;
+    box-sizing: border-box;
+}
+
+    .note-textarea::placeholder {
+        color: #A0AEC0; /* Yeni Metin Rengi (Koyu/Yardýmcý) */
+    }
+
+    .note-textarea:focus {
+        outline: none;
+        border-color: #63B3ED; /* Yeni Vurgu Rengi 1 */
+        box-shadow: 0 0 5px rgba(99, 179, 237, 0.5);
+    }
+
+.app-footer {
+    text-align: center;
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid #4A5568; /* Yeni Kenarlýk/Ayýrýcý */
+    color: #A0AEC0; /* Yeni Metin Rengi (Koyu/Yardýmcý) */
+    font-size: 0.9em;
+}
+
+    .app-footer a {
+        color: #63B3ED; /* Yeni Vurgu Rengi 1 */
+        text-decoration: none;
+    }
+
+        .app-footer a:hover {
+            text-decoration: underline;
+        }
+
+/* Responsive Düzenlemeler */
+@media (max-width: 768px) {
+    .content-area {
+        flex-direction: column;
+    }
+
+    .task-list-section,
+    .note-section {
+        min-width: auto;
+        width: 100%;
+    }
+
+    .action-button.edit-button {
+        position: static;
+        transform: none;
+        margin-top: 15px;
+        width: 100%;
+    }
+
+    .task-list li:last-child {
+        flex-direction: row;
+        justify-content: center;
+        width: 100%;
+        transform: none;
+    }
+}
+
+/* --- Yeni Öðe Oluþtur (Create Tablosu) Stilleri --- */
+
+.container h1 {
+    color: #63B3ED; /* Yeni Vurgu Rengi 1 */
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 2.2rem;
+    font-weight: 700;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+    .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        color: #E2E8F0; /* Yeni Metin Rengi (Açýk) */
+        font-size: 1.1em;
+        font-weight: 500;
+    }
+
+    .form-group input[type="text"],
+    .form-group input[type="url"],
+    .form-group textarea,
+    .form-group select {
+        width: calc(100% - 20px);
+        padding: 12px;
+        border: 1px solid #242D3D; /* Yeni Navbar Arka Planýna yakýn kenarlýk */
+        border-radius: 6px;
+        background-color: #212936; /* Daha koyu arka plan */
+        color: #E2E8F0; /* Yeni Metin Rengi (Açýk) */
+        font-size: 1em;
+        box-sizing: border-box;
+        transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+        .form-group input[type="text"]:focus,
+        .form-group input[type="url"]:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #63B3ED; /* Yeni Vurgu Rengi 1 */
+            box-shadow: 0 0 8px rgba(99, 179, 237, 0.4);
+        }
+
+    .form-group textarea {
+        min-height: 120px;
+        resize: vertical;
+    }
+
+        .form-group input::placeholder,
+        .form-group textarea::placeholder {
+            color: #A0AEC0; /* Yeni Metin Rengi (Koyu/Yardýmcý) */
+        }
+
+    .form-group select {
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        background-image: url('data:image/svg+xml;utf8,<svg fill="%23E2E8F0" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/><path d="M0 0h24v24H0z" fill="none"/></svg>'); /* Ok simgesi de yeni metin rengiyle uyumlu */
+        background-repeat: no-repeat;
+        background-position: right 10px center;
+        padding-right: 30px;
+    }
+
+.validation-summary-errors {
+    color: #FC8181; /* Yeni Hata Rengi */
+    background-color: rgba(252, 129, 129, 0.1); /* Hata Rengi'nin hafif transparan tonu */
+    border: 1px solid #FC8181;
+    border-radius: 5px;
+    padding: 10px 15px;
+    margin-bottom: 20px;
+    font-weight: bold;
+}
+
+.field-validation-error {
+    color: #FC8181; /* Yeni Hata Rengi */
+    font-size: 0.9em;
+    margin-top: 5px;
+    display: block;
+}
+
+.form-check {
+    display: flex;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+    .form-check input[type="checkbox"] {
+        width: 20px;
+        height: 20px;
+        margin-right: 10px;
+        accent-color: #63B3ED; /* Yeni Vurgu Rengi 1 */
+        cursor: pointer;
+    }
+
+    .form-check label {
+        color: #E2E8F0; /* Yeni Metin Rengi (Açýk) */
+        font-size: 1.1em;
+        cursor: pointer;
+    }
+
+.btn-submit {
+    display: block;
+    width: 100%;
+    padding: 15px 25px;
+    background-color: #63B3ED; /* Yeni Vurgu Rengi 1 */
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.2em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+}
+
+    .btn-submit:hover {
+        background-color: #F6AD55; /* Yeni Vurgu Rengi 2 */
+        transform: translateY(-2px);
+    }
+
+.back-link {
+    display: block;
+    text-align: center;
+    margin-top: 25px;
+    color: #63B3ED; /* Yeni Vurgu Rengi 1 */
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1.1em;
+    border: 1px solid #63B3ED; /* Yeni Vurgu Rengi 1 */
+    padding: 10px 20px;
+    border-radius: 30px;
+    transition: background 0.3s ease, color 0.3s ease;
+    width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+    .back-link:hover {
+        background: #63B3ED; /* Yeni Vurgu Rengi 1 */
+        color: #1A202C; /* Yeni Ana Arka Plan (metin için) */
+    }
+
+/* Responsive Düzenlemeler - Küçük ekranlar için */
+@media (max-width: 600px) {
+    .container {
+        padding: 20px;
+        margin: 10px;
+    }
+
+    .form-group input[type="text"],
+    .form-group input[type="url"],
+    .form-group textarea,
+    .form-group select {
+        width: 100%;
+    }
+
+    .btn-submit {
+        font-size: 1.1em;
+        padding: 12px 20px;
+    }
+}
+/* Görev listesi butonlarý için konteyner */
+.task-list-buttons-container {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 20px;
+    padding-bottom: 0; /* Gerekirse ayarlayýn */
+    border-bottom: none; /* Alt çizgiyi kaldýr */
+}
+
+/* Sil butonu stili */
+.action-button.delete-button {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    background-color: #FC8181; /* Yeni Hata Rengi */
+    color: white;
+    font-size: 1.2em;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+    .action-button.delete-button:hover {
+        background-color: #E55353; /* Daha koyu kýrmýzý */
+        transform: scale(1.05);
+    }
+
+/* Eðer görev yoksa mesajý ortala */
+.task-list .no-tasks {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    color: #A0AEC0; /* Yardýmcý metin rengi */
+    font-style: italic;
+    border-bottom: none;
 }

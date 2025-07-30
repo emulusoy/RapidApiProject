@@ -12,5 +12,6 @@ namespace RapidApiProject.Context
         public DbSet<Series> Series { get; set; }
         public DbSet<Movie> Movies { get; set; }
         public DbSet<Game> Games { get; set; }
+        public DbSet<Note> Notes { get; set; }
     }
 }

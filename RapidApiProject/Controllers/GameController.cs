@@ -49,7 +49,7 @@ namespace RapidApiProject.Controllers
         {
             return View();
         }
-        public async Task<IActionResult> DeleteGame(int id)
+        public async Task<IActionResult> DeleteGame(int id, string returnUrl = null)
         {
             var value = _context.Games.Find(id);
             ViewBag.totalPage=_context.Games.Count();
@@ -57,6 +57,10 @@ namespace RapidApiProject.Controllers
             {
                 _context.Games.Remove(value);
                 await _context.SaveChangesAsync();
+            }
+            if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
+            {
+                return Redirect(returnUrl);
             }
             return RedirectToAction("Index", "Game");
 
