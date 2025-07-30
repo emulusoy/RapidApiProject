@@ -3,6 +3,7 @@
 <div class="movie-card">
     <div class="watched-status @(Model.Watched ? "watched" : "not-watched")">
         @(Model.Watched ? "Watched" : "Not-Watched")
+
     </div>
     <img class="movie-image" src="@Model.Image" alt="@Model.Title" />
     <div class="movie-content">
@@ -10,8 +11,28 @@
         <div class="movie-description">
             @(string.IsNullOrEmpty(Model.Description) ? "Bu filmin/oyunun henüz bir açıklaması bulunmamaktadır." : Model.Description)
         </div>
-        <div class="movie-rating">Point: @Model.Rating.ToString()</div>
+        <div class="movie-rating">Point: @Model.Rating.ToString()
+        
+        </div>
         <div class="aDel">
+
+            <a href="/Game/EditWatch/@Model.ID?returnUrl=@(Context.Request.Path + Context.Request.QueryString)" class="edit-watch-btn" title="Change Watched Status">
+                @if (Model.Watched)
+                {
+                    <svg xmlns="http://www.w3.org/2000/svg" height="26" width="26" viewBox="0 0 24 24" fill="none" stroke="#28a745" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                        <circle cx="12" cy="12" r="3"></circle>
+                    </svg>
+                }
+                else
+                {
+                    <svg xmlns="http://www.w3.org/2000/svg" height="26" width="26" viewBox="0 0 24 24" fill="none" stroke="#dc3545" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M17.94 17.94A10.94 10.94 0 0 1 12 20c-7 0-11-8-11-8a21.52 21.52 0 0 1 5.29-6.71"></path>
+                        <path d="M1 1l22 22"></path>
+                    </svg>
+                }
+            </a>
+
             <a href="/Game/DeleteGame/@Model.ID">
                 <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="30" height="30" viewBox="0 0 100 100">
                     <path fill="#de333b" d="M73.771,20.2c-8.015-8.106-18.327-10.62-28.665-9.063C33.721,11.544,23.077,17.646,17.03,27.51	c-6.745,11.003-6.653,26.632-0.376,37.86c6.57,11.752,21.886,18.441,35.099,16.927c13.927-1.596,25.252-11.19,29.664-24.392	C85.537,45.575,83.104,29.638,73.771,20.2z"></path>
@@ -20,5 +41,6 @@
                 </svg>
             </a>
         </div>
+        
     </div>
 </div>

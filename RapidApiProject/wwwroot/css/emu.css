@@ -8,7 +8,7 @@ body {
 }
 
 .navbar {
-    background: white;
+    background: #565555;
     padding: 15px 20px;
     box-shadow: 0 2px 5px rgba(0,0,0,0.5);
     display: flex;
@@ -28,7 +28,7 @@ body {
 }
 
 .navbar-links a {
-    color: #0e2448;
+    color: white;
     text-decoration: none;
     margin-left: 25px;
     font-size: 1.3rem;
@@ -87,6 +87,10 @@ h1 {
     padding: 15px;
     position: relative; /* yeni eklendi */
     padding-bottom: 60px; /* rating ve ikonlar için alan aç */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    flex-grow: 1;
 }
 
 .movie-rank {
@@ -119,6 +123,10 @@ h1 {
     position: absolute;
     bottom: 10px;
     right: 10px;
+    margin-top: auto;
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
 }
 
 .imdb-link {
@@ -235,8 +243,16 @@ h1 {
     }
 
     .filter-link.active-filter {
-        background-color: #ff6f61;
+        background-color: #202866;
         color: white;
-        border: 1px solid #ff6f61;
+        border: 1px solid white;
         font-weight: bold;
     }
+.edit-watch-btn svg {
+    transition: 0.3s;
+}
+
+.edit-watch-btn:hover svg {
+    stroke: #0056b3;
+    transform: scale(1.1);
+}

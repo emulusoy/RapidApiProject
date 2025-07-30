@@ -61,5 +61,21 @@ namespace RapidApiProject.Controllers
             return RedirectToAction("Index", "Game");
 
         }
+        public async Task<IActionResult> EditWatch(int id, string returnUrl = null)
+        {
+            var value = await _context.Games.FindAsync(id);
+            if (value != null)
+            {
+                value.Watched = !value.Watched;
+                await _context.SaveChangesAsync();
+            }
+
+            if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
+            {
+                return Redirect(returnUrl);
+            }
+
+            return RedirectToAction("Index", "Game");
+        }
     }
 }
