@@ -1,0 +1,131 @@
+﻿@model MediaIndexVM
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string returnUrl = (Context.Request.Path + Context.Request.QueryString).ToString();
+
+    string ActiveTab(string t) => Model.Type.Equals(t, StringComparison.OrdinalIgnoreCase)
+        ? "text-indigo-600 bg-indigo-50 dark:bg-indigo-900/30 font-semibold"
+        : "text-gray-600 dark:text-gray-300 hover:text-indigo-600 hover:bg-gray-100 dark:hover:bg-gray-800";
+    string ActiveFilter(string f) => Model.Filter.Equals(f, StringComparison.OrdinalIgnoreCase)
+        ? "text-indigo-600 bg-gray-100 dark:bg-gray-800 font-semibold"
+        : "text-gray-600 dark:text-gray-300 hover:text-indigo-600 hover:bg-gray-100 dark:hover:bg-gray-800";
+}
+
+@* @section Head {
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+} *@
+
+<section class="py-6">
+    <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <h1 class="text-2xl font-bold tracking-tight">
+            List –
+            @(
+                string.Equals(Model.Type, "series", StringComparison.OrdinalIgnoreCase) ? "Series" :
+                string.Equals(Model.Type, "game", StringComparison.OrdinalIgnoreCase) ? "Games" :
+                string.Equals(Model.Type, "all", StringComparison.OrdinalIgnoreCase) ? "All" :
+                "Movies"
+                )
+        </h1>
+
+        <!-- Tip sekmeleri -->
+        <div class="flex rounded-xl border border-gray-200 dark:border-gray-800 overflow-hidden">
+            <a class="px-4 py-2 text-sm transition @ActiveTab("movie")" href="@Url.Action("Index", new { type="movie",  filter=Model.Filter })"><i class="fa-solid fa-film mr-2"></i> Movies</a>
+            <a class="px-4 py-2 text-sm transition @ActiveTab("series")" href="@Url.Action("Index", new { type="series", filter=Model.Filter })"><i class="fa-solid fa-tv mr-2"></i> Series</a>
+            <a class="px-4 py-2 text-sm transition @ActiveTab("game")" href="@Url.Action("Index", new { type="game",   filter=Model.Filter })"><i class="fa-solid fa-gamepad mr-2"></i> Games</a>
+            <a class="px-4 py-2 text-sm transition @ActiveTab("all")" href="@Url.Action("Index", new { type="all",    filter=Model.Filter })"><i class="fa-regular fa-clone mr-2"></i> All</a>
+        </div>
+
+        <!-- Filtre -->
+        <div class="flex rounded-xl border border-gray-200 dark:border-gray-800 overflow-hidden">
+            <a class="px-4 py-2 text-sm transition @ActiveFilter("all")" href="@Url.Action("Index", new { type=Model.Type, filter="all" })">All</a>
+            <a class="px-4 py-2 text-sm transition @ActiveFilter("watched")" href="@Url.Action("Index", new { type=Model.Type, filter="watched" })">Watched</a>
+            <a class="px-4 py-2 text-sm transition @ActiveFilter("not-watched")" href="@Url.Action("Index", new { type=Model.Type, filter="not-watched" })">Not Watched</a>
+        </div>
+    </div>
+
+    <!-- Grid -->
+    <div class="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        @foreach (var m in Model.Items)
+        {
+            <article class="group rounded-2xl border border-gray-200 dark:border-gray-800 overflow-hidden bg-white dark:bg-gray-900 shadow-sm hover:shadow-md transition">
+                <div class="relative">
+                    <img src="@(string.IsNullOrWhiteSpace(m.Image) ? "https://via.placeholder.com/600x800?text=No+Image" : m.Image)"
+                         alt="@m.Title" class="h-64 w-full object-cover" />
+                    <div class="absolute left-3 top-3">
+                        <span class="inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font-medium
+                            @(m.Watched ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-200"
+                                        : "bg-rose-100 text-rose-700 dark:bg-rose-900/40 dark:text-rose-200")">
+                            <i class="fa-solid @(m.Watched ? "fa-check" : "fa-eye-slash")"></i>
+                            @(m.Watched ? "Watched" : "Not Watched")
+                        </span>
+                    </div>
+                    <div class="absolute right-3 top-3">
+                        <span class="inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font-medium bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-200">
+                            <i class="fa-solid fa-star"></i> @m.Rating
+                        </span>
+                    </div>
+                    @if (Model.Type.Equals("all", StringComparison.OrdinalIgnoreCase))
+                    {
+                        <div class="absolute left-3 bottom-3">
+                            <span class="inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font-medium bg-indigo-100 text-indigo-700 dark:bg-indigo-900/40 dark:text-indigo-200">
+                                <i class="fa-regular fa-clone"></i> @m.Type
+                            </span>
+                        </div>
+                    }
+                </div>
+
+                <div class="p-4 flex flex-col gap-3">
+                    <h3 class="text-base font-semibold line-clamp-1">@m.Title</h3>
+                    <p class="text-sm text-gray-600 dark:text-gray-300 line-clamp-3">
+                        @(string.IsNullOrWhiteSpace(m.Description) ? "Bu kayıt için açıklama eklenmemiş." : m.Description)
+                    </p>
+
+                    <div class="mt-2 flex items-center justify-between">
+                        <a class="inline-flex items-center gap-2 rounded-xl border border-gray-200 dark:border-gray-800 px-3 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-800 transition"
+                           href="@Url.Action("EditWatch", "Default", new { type = Model.Type.Equals("all",StringComparison.OrdinalIgnoreCase) ? m.Type.ToString().ToLower() : Model.Type, id = m.Id, returnUrl })"
+                           title="Change Watched Status">
+                            <i class="fa-solid @(m.Watched ? "fa-eye" : "fa-eye-slash")"></i>
+                            Toggle
+                        </a>
+
+                        <a class="inline-flex items-center gap-2 rounded-xl border border-rose-200 text-rose-600 dark:border-rose-900/60 px-3 py-2 text-sm hover:bg-rose-50 dark:hover:bg-rose-900/20 transition"
+                           href="@Url.Action("DeleteItem", "Default", new { type = Model.Type.Equals("all",StringComparison.OrdinalIgnoreCase) ? m.Type.ToString().ToLower() : Model.Type, id = m.Id, returnUrl })"
+                           onclick="return confirm('Silmek istediğine emin misin?');">
+                            <i class="fa-solid fa-trash"></i>
+                            Delete
+                        </a>
+                    </div>
+                </div>
+            </article>
+        }
+    </div>
+
+    <!-- Pagination -->
+    @if (Model.TotalPages > 1)
+    {
+        <nav class="mt-8 flex items-center justify-center gap-2">
+            @{
+                int prev = Math.Max(1, Model.CurrentPage - 1);
+                int next = Math.Min(Model.TotalPages, Model.CurrentPage + 1);
+            }
+            <a class="px-3 py-2 text-sm rounded-xl border border-gray-200 dark:border-gray-800 hover:bg-gray-100 dark:hover:bg-gray-800 transition
+                      @(Model.CurrentPage == 1 ? "opacity-50 pointer-events-none" : "")"
+               href="@Url.Action("Index", new { type = Model.Type, filter = Model.Filter, page = prev, pageSize = Model.PageSize })">Prev</a>
+
+            @for (int i = 1; i <= Model.TotalPages; i++)
+            {
+                <a class="px-3 py-2 text-sm rounded-xl border transition
+                          @(i == Model.CurrentPage
+                            ? "border-indigo-300 bg-indigo-50 text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-200"
+                            : "border-gray-200 dark:border-gray-800 hover:bg-gray-100 dark:hover:bg-gray-800")"
+                   href="@Url.Action("Index", new { type = Model.Type, filter = Model.Filter, page = i, pageSize = Model.PageSize })">@i</a>
+            }
+
+            <a class="px-3 py-2 text-sm rounded-xl border border-gray-200 dark:border-gray-800 hover:bg-gray-100 dark:hover:bg-gray-800 transition
+                      @(Model.CurrentPage == Model.TotalPages ? "opacity-50 pointer-events-none" : "")"
+               href="@Url.Action("Index", new { type = Model.Type, filter = Model.Filter, page = next, pageSize = Model.PageSize })">Next</a>
+        </nav>
+    }
+</section>

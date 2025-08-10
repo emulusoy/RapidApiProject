@@ -1,24 +1,146 @@
-﻿<!DOCTYPE html>
+﻿@{
+    var ctrl = (ViewContext.RouteData.Values["controller"]?.ToString() ?? "").ToLowerInvariant();
+    var action = (ViewContext.RouteData.Values["action"]?.ToString() ?? "").ToLowerInvariant();
+    var type = (Context.Request.Query["type"].ToString() ?? "movie").ToLowerInvariant();
+
+    string NavCls(bool active) => active
+        ? "text-indigo-600 font-semibold px-3 py-2 rounded-xl bg-indigo-50 dark:bg-indigo-900/30"
+        : "text-gray-700 dark:text-gray-300 hover:text-indigo-600 hover:bg-gray-100 dark:hover:bg-gray-800 px-3 py-2 rounded-xl";
+
+    string IconCls(bool active) =>
+        "h-11 w-11 inline-flex items-center justify-center rounded-xl border transition " +
+        (active
+            ? "border-transparent text-indigo-600 bg-indigo-50 dark:bg-indigo-900/30"
+            : "border-gray-200 dark:border-gray-800 hover:bg-gray-100 dark:hover:bg-gray-800");
+}
+
+<!DOCTYPE html>
 <html lang="tr">
 <head>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <meta charset="UTF-8" />
+    <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Film Dizi Oyun</title>
-    <link href="/css/emu.css" rel="stylesheet" />
+    <title>@(ViewBag.Title ?? "Film · Dizi · Oyun")</title>
+    <meta name="color-scheme" content="light dark" />
+
+    <!-- İlk boyamada dark class -->
+    <script>
+        (function () {
+          try {
+            var t = localStorage.getItem('theme');
+            if (t === 'dark' || (!t && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+              document.documentElement.classList.add('dark');
+            } else {
+              document.documentElement.classList.remove('dark');
+            }
+          } catch(e){}
+        })();
+    </script>
+
+    <!-- 1) CDN'i ÖNCE yükle -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- 2) Config'i SONRA ver (doğru imza: tailwind.config) -->
+    <script>
+        tailwind.config = { darkMode: 'class' };
+    </script>
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+    @RenderSection("Head", required: false) <!-- burada artık Tailwind tekrar YOK -->
 </head>
-<body>
-    <div class="navbar">
-        <div class="navbar-links">
-            <a href="/Default/Dashboard/" class="navbar-brand @(ViewContext.RouteData.Values["controller"].ToString() == "Default" ? "active-nav-link" : "")">Home</a>
-            <a href="/Movie/Index/" class="navbar-brand @(ViewContext.RouteData.Values["controller"].ToString() == "Movie" ? "active-nav-link" : "")">Movies</a>
-            <a href="/Series/Index/" class="navbar-brand @(ViewContext.RouteData.Values["controller"].ToString() == "Series" ? "active-nav-link" : "")">Series</a>
-            <a href="/Game/Index/" class="navbar-brand @(ViewContext.RouteData.Values["controller"].ToString() == "Game" ? "active-nav-link" : "")">Games</a>
-            <a href="/Create/Index/" class="navbar-brand @(ViewContext.RouteData.Values["controller"].ToString() == "Create" ? "active-nav-link" : "")">Create</a>
+
+<body class="min-h-screen bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-100 antialiased">
+    <!-- ÜST MENÜ -->
+    <header class="fixed inset-x-0 top-0 z-40 border-b border-gray-200/70 bg-white/80 backdrop-blur-md dark:border-gray-800 dark:bg-gray-900/70">
+        <div class="mx-auto max-w-7xl h-16 px-4 sm:px-6 lg:px-8 flex items-center justify-between">
+            <a href="@Url.Action("Index","Default")" class="flex items-center gap-2 font-semibold tracking-tight">
+                <i class="fa-solid fa-clapperboard text-indigo-500"></i>
+                <span class="hidden sm:inline">eMulusoy</span>
+            </a>
+
+            <nav class="hidden md:flex items-center gap-2 text-sm font-medium">
+                <a class="@NavCls(ctrl=="default" && action=="index" && string.IsNullOrEmpty(type))"
+                   href="@Url.Action("Index","Default")">Home</a>
+
+                <a class="@NavCls(ctrl=="default" && action=="index" && type=="movie")"
+                   href="@Url.Action("Index","Default", new { type="movie" })">Movies</a>
+
+                <a class="@NavCls(ctrl=="default" && action=="index" && type=="series")"
+                   href="@Url.Action("Index","Default", new { type="series" })">Series</a>
+
+                <a class="@NavCls(ctrl=="default" && action=="index" && type=="game")"
+                   href="@Url.Action("Index","Default", new { type="game" })">Games</a>
+
+                <a class="@NavCls(ctrl=="default" && action=="create")"
+                   href="@Url.Action("Create","Default", new { type = type })">Create</a>
+            </nav>
+
+            <div class="flex items-center gap-2">
+                <button id="themeToggle"
+                        class="h-10 w-10 inline-flex items-center justify-center rounded-xl border border-gray-200 dark:border-gray-800 hover:bg-gray-100 dark:hover:bg-gray-800 transition"
+                        title="Tema">
+                    <i class="fa-regular fa-moon hidden dark:inline"></i>
+                    <i class="fa-regular fa-sun dark:hidden"></i>
+                    <span class="sr-only">Tema Değiştir</span>
+                </button>
+
+                <button id="openSide"
+                        class="md:hidden h-10 w-10 inline-flex items-center justify-center rounded-xl border border-gray-200 dark:border-gray-800 hover:bg-gray-100 dark:hover:bg-gray-800 transition"
+                        title="Menü">
+                    <i class="fa-solid fa-bars"></i>
+                    <span class="sr-only">Menüyü Aç</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- SAĞ İKON BAR (MD+) -->
+    <aside class="hidden md:flex fixed top-16 right-0 z-30 h-[calc(100vh-4rem)] w-16 flex-col items-center gap-3 border-l border-gray-200 bg-white/80 backdrop-blur-md p-2 dark:border-gray-800 dark:bg-gray-900/70">
+        <a class="@IconCls(ctrl=="default" && action=="index" && string.IsNullOrEmpty(type))" title="Home" href="@Url.Action("Index","Default")"><i class="fa-solid fa-house"></i></a>
+        <a class="@IconCls(ctrl=="default" && action=="index" && type=="movie")" title="Movies" href='@Url.Action("Index","Default", new { type="movie" })'><i class="fa-solid fa-film"></i></a>
+        <a class="@IconCls(ctrl=="default" && action=="index" && type=="series")" title="Series" href='@Url.Action("Index","Default", new { type="series" })'><i class="fa-solid fa-tv"></i></a>
+        <a class="@IconCls(ctrl=="default" && action=="index" && type=="game")" title="Games" href='@Url.Action("Index","Default", new { type="game" })'><i class="fa-solid fa-gamepad"></i></a>
+        <a class="@IconCls(ctrl=="default" && action=="create")" title="Create" href='@Url.Action("Create","Default", new { type = type })'><i class="fa-solid fa-plus"></i></a>
+    </aside>
+
+    <!-- MOBİL SAĞ PANEL -->
+    <div id="mobileSide" class="fixed inset-0 z-50 md:hidden hidden">
+        <div class="absolute inset-0 bg-black/40" data-close="1"></div>
+        <div class="absolute right-0 top-16 bottom-0 w-64 bg-white dark:bg-gray-900 border-l border-gray-200 dark:border-gray-800 p-4">
+            <nav class="flex flex-col gap-2 text-base">
+                <a href="@Url.Action("Index","Default")" class="flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800"><i class="fa-solid fa-house w-6"></i> Home</a>
+                <a href='@Url.Action("Index","Default", new { type="movie" })' class="flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800"><i class="fa-solid fa-film w-6"></i> Movies</a>
+                <a href='@Url.Action("Index","Default", new { type="series" })' class="flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800"><i class="fa-solid fa-tv w-6"></i> Series</a>
+                <a href='@Url.Action("Index","Default", new { type="game" })' class="flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800"><i class="fa-solid fa-gamepad w-6"></i> Games</a>
+                <a href='@Url.Action("Create","Default", new { type = type })' class="flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800"><i class="fa-solid fa-plus w-6"></i> Create</a>
+            </nav>
         </div>
     </div>
 
-    @RenderBody()
+    <!-- İÇERİK -->
+    <main class="pt-20 md:pr-20">
+        <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            @RenderBody()
+        </div>
+    </main>
 
+    @RenderSection("Scripts", required: false)
+
+    <script>
+        // Tema toggle (class mod)
+        document.getElementById('themeToggle')?.addEventListener('click', function () {
+          var root = document.documentElement;
+          var isDark = root.classList.toggle('dark');
+          try { localStorage.setItem('theme', isDark ? 'dark' : 'light'); } catch(e){}
+        });
+
+        // Mobil sağ menü
+        const mobileSide = document.getElementById('mobileSide');
+        document.getElementById('openSide')?.addEventListener('click', () => mobileSide?.classList.remove('hidden'));
+        mobileSide?.addEventListener('click', (e) => {
+          if (e.target.getAttribute?.('data-close')) mobileSide.classList.add('hidden');
+        });
+    </script>
 </body>
 </html>
