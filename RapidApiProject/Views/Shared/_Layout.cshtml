@@ -39,7 +39,7 @@
     <!-- 1) CDN'i ÖNCE yükle -->
     <script src="https://cdn.tailwindcss.com"></script>
 
-    <!-- 2) Config'i SONRA ver (doğru imza: tailwind.config) -->
+    <!-- 2) Config'i SONRA ver -->
     <script>
         tailwind.config = { darkMode: 'class' };
     </script>
@@ -47,7 +47,7 @@
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 
-    @RenderSection("Head", required: false) <!-- burada artık Tailwind tekrar YOK -->
+    @RenderSection("Head", required: false)
 </head>
 
 <body class="min-h-screen bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-100 antialiased">
@@ -74,6 +74,14 @@
 
                 <a class="@NavCls(ctrl=="default" && action=="create")"
                    href="@Url.Action("Create","Default", new { type = type })">Create</a>
+
+                @* ADDED: Planner (Ay) *@
+                <a class="@NavCls(ctrl=="planner" && action=="index")"
+                   href="@Url.Action("Index","Planner")">Planner</a>
+
+                @* ADDED: 3 Gün Odak *@
+                <a class="@NavCls(ctrl=="planner" && action=="focus")"
+                   href="@Url.Action("Focus","Planner")">3 Gün Odak</a>
             </nav>
 
             <div class="flex items-center gap-2">
@@ -102,6 +110,10 @@
         <a class="@IconCls(ctrl=="default" && action=="index" && type=="series")" title="Series" href='@Url.Action("Index","Default", new { type="series" })'><i class="fa-solid fa-tv"></i></a>
         <a class="@IconCls(ctrl=="default" && action=="index" && type=="game")" title="Games" href='@Url.Action("Index","Default", new { type="game" })'><i class="fa-solid fa-gamepad"></i></a>
         <a class="@IconCls(ctrl=="default" && action=="create")" title="Create" href='@Url.Action("Create","Default", new { type = type })'><i class="fa-solid fa-plus"></i></a>
+
+        @* ADDED: Planner ikonları *@
+        <a class="@IconCls(ctrl=="planner" && action=="index")" title="Planner" href='@Url.Action("Index","Planner")'><i class="fa-solid fa-calendar-days"></i></a>
+        <a class="@IconCls(ctrl=="planner" && action=="focus")" title="3 Gün Odak" href='@Url.Action("Focus","Planner")'><i class="fa-solid fa-bullseye"></i></a>
     </aside>
 
     <!-- MOBİL SAĞ PANEL -->
@@ -114,6 +126,10 @@
                 <a href='@Url.Action("Index","Default", new { type="series" })' class="flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800"><i class="fa-solid fa-tv w-6"></i> Series</a>
                 <a href='@Url.Action("Index","Default", new { type="game" })' class="flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800"><i class="fa-solid fa-gamepad w-6"></i> Games</a>
                 <a href='@Url.Action("Create","Default", new { type = type })' class="flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800"><i class="fa-solid fa-plus w-6"></i> Create</a>
+
+                @* ADDED: Planner *@
+                <a href='@Url.Action("Index","Planner")' class="flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800"><i class="fa-solid fa-calendar-days w-6"></i> Planner</a>
+                <a href='@Url.Action("Focus","Planner")' class="flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800"><i class="fa-solid fa-bullseye w-6"></i> 3 Gün Odak</a>
             </nav>
         </div>
     </div>
