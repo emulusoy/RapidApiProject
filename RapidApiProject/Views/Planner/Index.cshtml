@@ -29,7 +29,7 @@
                 <h2 class="font-semibold mb-3">Hızlı Görev Ekle</h2>
                 <div class="space-y-3">
                     <input id="quickTitle" class="w-full rounded-xl border border-gray-300 dark:border-gray-700 bg-transparent px-3 py-2" placeholder="Görev başlığı..." />
-                    <div class="flex items-center gap-2">
+                    <div class="flex flex-wrap items-center gap-2">
                         <select id="quickScope" class="rounded-xl border border-gray-300 dark:border-gray-700 bg-transparent px-3 py-2">
                             <option value="backlog">Backlog</option>
                             <option value="day">Günlük</option>
@@ -37,8 +37,14 @@
                             <option value="month">Aylık</option>
                             <option value="year">Yıllık</option>
                         </select>
-                        <input id="quickDate" type="date" class="rounded-xl border border-gray-300 dark:border-gray-700 bg-transparent px-3 py-2" />
-                        <button id="quickAdd" class="ml-auto px-3 py-2 rounded-xl bg-indigo-600 text-white hover:bg-indigo-700">Ekle</button>
+
+                        <input id="quickDate" type="date"
+                               class="rounded-xl border border-gray-300 dark:border-gray-700 bg-transparent px-3 py-2 w-36 sm:w-40" />
+
+                        <button id="quickAdd"
+                                class="ml-auto sm:ml-0 shrink-0 px-3 py-2 rounded-xl bg-indigo-600 text-white hover:bg-indigo-700">
+                            Ekle
+                        </button>
                     </div>
                 </div>
             </div>
@@ -88,19 +94,15 @@
         <!-- Sağ ana: Ay takvimi -->
         <div class="lg:col-span-8 xl:col-span-9">
             <div class="rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 overflow-hidden">
-                <!-- Gün başlıkları -->
-                <div class="grid grid-cols-7 text-xs font-medium text-gray-500 dark:text-gray-400 border-b border-gray-200 dark:border-gray-800">
-                    <div class="px-3 py-2">Pzt</div>
-                    <div class="px-3 py-2">Sal</div>
-                    <div class="px-3 py-2">Çar</div>
-                    <div class="px-3 py-2">Per</div>
-                    <div class="px-3 py-2">Cum</div>
-                    <div class="px-3 py-2">Cmt</div>
-                    <div class="px-3 py-2">Paz</div>
-                </div>
-                <!-- Hücreler -->
-                <div id="calendarGrid" class="grid grid-cols-7 auto-rows-[minmax(140px,auto)]">
-                    @* JS render eder *@
+                <div class="overflow-x-auto">
+                    <div class="min-w-[720px]">
+                        <div class="grid grid-cols-7 text-xs font-medium text-gray-500 dark:text-gray-400 border-b border-gray-200 dark:border-gray-800">
+                            <div class="px-3 py-2">Pzt</div><div class="px-3 py-2">Sal</div><div class="px-3 py-2">Çar</div>
+                            <div class="px-3 py-2">Per</div><div class="px-3 py-2">Cum</div><div class="px-3 py-2">Cmt</div><div class="px-3 py-2">Paz</div>
+                        </div>
+                        <div id="calendarGrid" class="grid grid-cols-7 auto-rows-[minmax(140px,auto)]"></div>
+
+                    </div>
                 </div>
             </div>
         </div>
