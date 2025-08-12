@@ -125,5 +125,15 @@ namespace RapidApiProject.Controllers
             await _db.SaveChangesAsync();
             return Json(new { id = e.Id });
         }
+        [HttpPost]
+        [IgnoreAntiforgeryToken] // İstersen AntiForgery ekleyelim
+        public async Task<IActionResult> Delete(int id)
+        {
+            var e = await _db.PlannerTasks.FindAsync(id);
+            if (e == null) return NotFound();
+            _db.PlannerTasks.Remove(e);
+            await _db.SaveChangesAsync();
+            return Ok(new { ok = true });
+        }
     }
 }

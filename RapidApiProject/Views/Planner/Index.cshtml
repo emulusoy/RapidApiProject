@@ -38,13 +38,20 @@
                             <option value="year">Yıllık</option>
                         </select>
 
-                        <input id="quickDate" type="date"
-                               class="rounded-xl border border-gray-300 dark:border-gray-700 bg-transparent px-3 py-2 w-36 sm:w-40" />
+                        <!-- Renk seçimi -->
+                        <select id="quickColor" class="rounded-xl border border-gray-300 dark:border-gray-700 bg-transparent px-3 py-2">
+                            <option value="indigo">İndigo</option>
+                            <option value="emerald">Zümrüt</option>
+                            <option value="rose">Gül</option>
+                            <option value="amber">Amber</option>
+                            <option value="violet">Mor</option>
+                            <option value="sky">Gökyüzü</option>
+                            <option value="slate">Kurşuni</option>
+                            <option value="fuchsia">Fușya</option>
+                        </select>
 
-                        <button id="quickAdd"
-                                class="ml-auto sm:ml-0 shrink-0 px-3 py-2 rounded-xl bg-indigo-600 text-white hover:bg-indigo-700">
-                            Ekle
-                        </button>
+                        <input id="quickDate" type="date" class="rounded-xl border border-gray-300 dark:border-gray-700 bg-transparent px-3 py-2 w-36 sm:w-40" />
+                        <button id="quickAdd" class="ml-auto sm:ml-0 shrink-0 px-3 py-2 rounded-xl bg-indigo-600 text-white hover:bg-indigo-700">Ekle</button>
                     </div>
                 </div>
             </div>
@@ -55,8 +62,13 @@
                     <h2 class="font-semibold">Backlog</h2>
                     <small class="text-gray-500 dark:text-gray-400">Sürükleyip takvime bırak</small>
                 </div>
-                <div id="backlogList" class="mt-3 flex flex-wrap gap-2">
-                    @* JS dolduracak *@
+                <div id="backlogList" class="mt-3 flex flex-wrap gap-2">@* JS dolduracak *@</div>
+
+                <!-- Çöp Kutusu (drag-to-delete) -->
+                <div id="trashBin"
+                     class="mt-4 flex items-center justify-center rounded-xl border-2 border-dashed border-rose-300/70 text-rose-600
+                dark:border-rose-700/70 dark:text-rose-300 h-14">
+                    <i class="fa-solid fa-trash-can mr-2"></i> Çöp Kutusu (Sürükleyip bırak)
                 </div>
             </div>
 
@@ -100,7 +112,9 @@
                             <div class="px-3 py-2">Pzt</div><div class="px-3 py-2">Sal</div><div class="px-3 py-2">Çar</div>
                             <div class="px-3 py-2">Per</div><div class="px-3 py-2">Cum</div><div class="px-3 py-2">Cmt</div><div class="px-3 py-2">Paz</div>
                         </div>
-                        <div id="calendarGrid" class="grid grid-cols-7 auto-rows-[minmax(140px,auto)]"></div>
+                        <!-- Başlıklar sabit kalsın; grid satır yüksekliği eşit olsun -->
+                        <div id="calendarGrid" class="grid grid-cols-7 auto-rows-[160px]"></div>
+
 
                     </div>
                 </div>
@@ -108,6 +122,34 @@
         </div>
     </div>
 </section>
+<!-- Görev Detay Modalı -->
+<div id="taskModalBackdrop" class="fixed inset-0 z-50 hidden bg-black/40">
+    <div class="flex min-h-full items-end sm:items-center justify-center p-4" id="taskModal">
+        <div class="w-full max-w-lg rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-4">
+            <div class="flex items-start justify-between">
+                <div>
+                    <div class="flex items-center gap-2">
+                        <span data-m-color class="inline-block h-3 w-3 rounded-full bg-indigo-500"></span>
+                        <h3 class="text-lg font-semibold" data-m-title>Başlık</h3>
+                    </div>
+                    <div class="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                        <span class="mr-3"><i class="fa-regular fa-calendar"></i> <span data-m-date>—</span></span>
+                        <span><i class="fa-regular fa-clock"></i> <span data-m-scope>day</span></span>
+                    </div>
+                </div>
+                <div class="flex items-center gap-2">
+                    <button data-m-delete class="px-3 py-1.5 rounded-xl text-rose-600 border border-rose-200 dark:border-rose-900/50 hover:bg-rose-50 dark:hover:bg-rose-900/20">
+                        <i class="fa-solid fa-trash"></i> Sil
+                    </button>
+                    <button id="taskModalClose" class="px-3 py-1.5 rounded-xl border border-gray-200 dark:border-gray-800 hover:bg-gray-100 dark:hover:bg-gray-800">
+                        Kapat
+                    </button>
+                </div>
+            </div>
+            <div class="mt-4 text-sm whitespace-pre-wrap break-words" data-m-notes>Not eklenmemiş.</div>
+        </div>
+    </div>
+</div>
 
 @section Scripts {
     <script src="~/js/planner.js" asp-append-version="true"></script>

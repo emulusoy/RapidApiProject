@@ -18,6 +18,34 @@
 
     <div id="focusColumns" class="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">@* JS *@</div>
 </section>
+<!-- Görev Detay Modalı -->
+<div id="taskModalBackdrop" class="fixed inset-0 z-50 hidden bg-black/40">
+    <div class="flex min-h-full items-end sm:items-center justify-center p-4" id="taskModal">
+        <div class="w-full max-w-lg rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-4">
+            <div class="flex items-start justify-between">
+                <div>
+                    <div class="flex items-center gap-2">
+                        <span data-m-color class="inline-block h-3 w-3 rounded-full bg-indigo-500"></span>
+                        <h3 class="text-lg font-semibold" data-m-title>Başlık</h3>
+                    </div>
+                    <div class="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                        <span class="mr-3"><i class="fa-regular fa-calendar"></i> <span data-m-date>—</span></span>
+                        <span><i class="fa-regular fa-clock"></i> <span data-m-scope>day</span></span>
+                    </div>
+                </div>
+                <div class="flex items-center gap-2">
+                    <button data-m-delete class="px-3 py-1.5 rounded-xl text-rose-600 border border-rose-200 dark:border-rose-900/50 hover:bg-rose-50 dark:hover:bg-rose-900/20">
+                        <i class="fa-solid fa-trash"></i> Sil
+                    </button>
+                    <button id="taskModalClose" class="px-3 py-1.5 rounded-xl border border-gray-200 dark:border-gray-800 hover:bg-gray-100 dark:hover:bg-gray-800">
+                        Kapat
+                    </button>
+                </div>
+            </div>
+            <div class="mt-4 text-sm whitespace-pre-wrap break-words" data-m-notes>Not eklenmemiş.</div>
+        </div>
+    </div>
+</div>
 
 @section Scripts {
     <script src="~/js/planner.js" asp-append-version="true"></script>
