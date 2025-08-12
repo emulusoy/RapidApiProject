@@ -14,5 +14,7 @@ namespace RapidApiProject.Context
         public DbSet<Game> Games { get; set; }
         public DbSet<PlannerGoal> PlannerGoals { get; set; }
         public DbSet<PlannerTask> PlannerTasks { get; set; }
+        public DbSet<Exercise> Exercises { get; set; }
+        public DbSet<ExerciseCategory> ExerciseCategories { get; set; }
     }
 }

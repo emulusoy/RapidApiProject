@@ -36,10 +36,8 @@
         })();
     </script>
 
-    <!-- 1) CDN'i ÖNCE yükle -->
     <script src="https://cdn.tailwindcss.com"></script>
 
-    <!-- 2) Config'i SONRA ver -->
     <script>
         tailwind.config = { darkMode: 'class' };
     </script>
@@ -82,6 +80,9 @@
                 @* ADDED: 3 Gün Odak *@
                 <a class="@NavCls(ctrl=="planner" && action=="focus")"
                    href="@Url.Action("Focus","Planner")">Focus</a>
+
+                <a class="@NavCls(ctrl=="exercise" && action=="library")"
+                   href="@Url.Action("Library","Exercise")">Exercises</a>
             </nav>
 
             <div class="flex items-center gap-2">
@@ -114,6 +115,8 @@
         @* ADDED: Planner ikonları *@
         <a class="@IconCls(ctrl=="planner" && action=="index")" title="Planner" href='@Url.Action("Index","Planner")'><i class="fa-solid fa-calendar-days"></i></a>
         <a class="@IconCls(ctrl=="planner" && action=="focus")" title="3 Gün Odak" href='@Url.Action("Focus","Planner")'><i class="fa-solid fa-bullseye"></i></a>
+        <a class="@IconCls(ctrl=="exercise")" title="Exercises" href="@Url.Action("Library","Exercise")"><i class="fa-solid fa-dumbbell"></i></a>
+
     </aside>
 
     <!-- MOBİL SAĞ PANEL -->

@@ -1,0 +1,117 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Egzersizler";
+}
+
+<section class="py-6">
+    <div class="mx-auto max-w-7xl grid gap-6 lg:grid-cols-12">
+
+        <!-- Sol: Tıklanabilir Vücut Kartı -->
+        <div class="lg:col-span-7 xl:col-span-8">
+            <div class="rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-4 sm:p-6 shadow-sm">
+
+                <!-- Üst bar -->
+                <div class="flex items-center justify-between mb-4">
+                    <h1 class="text-xl sm:text-2xl font-bold tracking-tight">Egzersizler</h1>
+                    <div class="flex items-center gap-2">
+                        <!-- Cinsiyet (sadece görünüm) -->
+                        <button id="maleBtn" class="h-9 w-9 inline-flex items-center justify-center rounded-full bg-gray-100 dark:bg-gray-800"
+                                title="Erkek">
+                            <i class="fa-solid fa-mars"></i>
+                        </button>
+                        <!-- Ön/Arka çevir -->
+                        <button id="flipSide" class="h-9 w-9 inline-flex items-center justify-center rounded-full bg-gray-100 dark:bg-gray-800"
+                                title="Ön/Arka">
+                            <i class="fa-solid fa-rotate"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- VÜCUT: ÖN -->
+                <div id="bodyFront" class="aspect-[3/5] w-full relative select-none">
+                    <svg viewBox="0 0 300 500" class="absolute inset-0 h-full w-full">
+                        <!-- Silüet (hafif gri) -->
+                        <rect x="70" y="40" width="160" height="420" rx="80" class="fill-gray-100 dark:fill-gray-800"></rect>
+
+                        <!-- === BÖLGELER (FRONT) === -->
+                        <!-- Omuzlar -->
+                        <circle cx="110" cy="120" r="24" class="region" data-region="shoulders" />
+                        <circle cx="190" cy="120" r="24" class="region" data-region="shoulders" />
+                        <!-- Göğüs -->
+                        <rect x="110" y="135" width="80" height="55" rx="8" class="region" data-region="chest" />
+                        <!-- Karın -->
+                        <rect x="120" y="195" width="60" height="110" rx="8" class="region" data-region="abs" />
+                        <!-- Biceps -->
+                        <rect x="78" y="170" width="25" height="60" rx="12" class="region" data-region="biceps" />
+                        <rect x="197" y="170" width="25" height="60" rx="12" class="region" data-region="biceps" />
+                        <!-- Ön kol -->
+                        <rect x="70" y="230" width="22" height="70" rx="11" class="region" data-region="forearms" />
+                        <rect x="208" y="230" width="22" height="70" rx="11" class="region" data-region="forearms" />
+                        <!-- Quadriceps -->
+                        <rect x="120" y="315" width="24" height="100" rx="12" class="region" data-region="quads" />
+                        <rect x="156" y="315" width="24" height="100" rx="12" class="region" data-region="quads" />
+                        <!-- Baldır (Calves) -->
+                        <rect x="120" y="420" width="22" height="60" rx="11" class="region" data-region="calves" />
+                        <rect x="158" y="420" width="22" height="60" rx="11" class="region" data-region="calves" />
+                    </svg>
+                </div>
+
+                <!-- VÜCUT: ARKA -->
+                <div id="bodyBack" class="aspect-[3/5] w-full relative select-none hidden">
+                    <svg viewBox="0 0 300 500" class="absolute inset-0 h-full w-full">
+                        <rect x="70" y="40" width="160" height="420" rx="80" class="fill-gray-100 dark:fill-gray-800"></rect>
+
+                        <!-- === BÖLGELER (BACK) === -->
+                        <!-- Traps -->
+                        <polygon points="150,110 115,130 185,130" class="region" data-region="traps"></polygon>
+                        <!-- Üst sırt / Lats -->
+                        <rect x="100" y="135" width="100" height="70" rx="10" class="region" data-region="lats"></rect>
+                        <!-- Arka omuz -->
+                        <circle cx="108" cy="140" r="20" class="region" data-region="rear-delts" />
+                        <circle cx="192" cy="140" r="20" class="region" data-region="rear-delts" />
+                        <!-- Triceps -->
+                        <rect x="78" y="170" width="25" height="60" rx="12" class="region" data-region="triceps" />
+                        <rect x="197" y="170" width="25" height="60" rx="12" class="region" data-region="triceps" />
+                        <!-- Bel (Lower back) -->
+                        <rect x="120" y="210" width="60" height="50" rx="10" class="region" data-region="lower-back"></rect>
+                        <!-- Glutes -->
+                        <rect x="115" y="260" width="70" height="50" rx="20" class="region" data-region="glutes"></rect>
+                        <!-- Hamstrings -->
+                        <rect x="120" y="315" width="24" height="100" rx="12" class="region" data-region="hamstrings" />
+                        <rect x="156" y="315" width="24" height="100" rx="12" class="region" data-region="hamstrings" />
+                        <!-- Calves -->
+                        <rect x="120" y="420" width="22" height="60" rx="11" class="region" data-region="calves" />
+                        <rect x="158" y="420" width="22" height="60" rx="11" class="region" data-region="calves" />
+                    </svg>
+                </div>
+
+                <!-- Legend -->
+                <div class="mt-3 text-xs text-gray-500 dark:text-gray-400">
+                    Bölgelerin üzerine gelince vurgulanır; tıklayınca sağdaki listede egzersizler gösterilir.
+                </div>
+            </div>
+        </div>
+
+        <!-- Sağ: Egzersiz Listesi -->
+        <aside class="lg:col-span-5 xl:col-span-4">
+            <div class="rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-4 sm:p-6 shadow-sm">
+                <div class="flex items-center justify-between mb-3">
+                    <h2 id="regionTitle" class="text-lg font-semibold">Bölge Seçin</h2>
+                    <div class="relative">
+                        <input id="searchInput" placeholder="Ara..." class="rounded-xl border border-gray-300 dark:border-gray-700 bg-transparent px-3 py-1.5 text-sm pr-8" />
+                        <i class="fa-solid fa-magnifying-glass absolute right-2 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                    </div>
+                </div>
+
+                <ul id="exerciseList" class="divide-y divide-gray-100 dark:divide-gray-800">
+                    <li class="py-3 text-sm text-gray-500 dark:text-gray-400">Herhangi bir bölgeye tıklayın.</li>
+                </ul>
+            </div>
+        </aside>
+
+    </div>
+</section>
+
+@section Scripts {
+    <script src="~/js/exercises.js" asp-append-version="true"></script>
+}

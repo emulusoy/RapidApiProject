@@ -1,0 +1,187 @@
+﻿@model ExerciseDetailVM
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    string Img() => string.IsNullOrWhiteSpace(Model.Image)
+        ? "https://via.placeholder.com/1000x600?text=Exercise"
+        : Model.Image;
+
+    // YouTube/Vimeo embed (varsa)
+    string? EmbedUrl()
+    {
+        if (string.IsNullOrWhiteSpace(Model.VideoUrl)) return null;
+        var url = Model.VideoUrl;
+
+        // YouTube
+        if (url.Contains("youtube.com/watch"))
+        {
+            var uri = new Uri(url);
+            var qs = System.Web.HttpUtility.ParseQueryString(uri.Query);
+            var id = qs["v"];
+            if (!string.IsNullOrEmpty(id)) return $"https://www.youtube.com/embed/{id}";
+        }
+        if (url.Contains("youtu.be/"))
+        {
+            var id = url.Split('/').Last();
+            if (!string.IsNullOrEmpty(id)) return $"https://www.youtube.com/embed/{id}";
+        }
+        // Vimeo
+        if (url.Contains("vimeo.com/"))
+        {
+            var id = url.Split('/').Last();
+            if (!string.IsNullOrEmpty(id)) return $"https://player.vimeo.com/video/{id}";
+        }
+        return null; // bilinmiyorsa normal link gösteririz
+    }
+
+    var embed = EmbedUrl();
+}
+
+<section class="py-6">
+    <div class="mx-auto max-w-7xl grid gap-6 lg:grid-cols-12">
+
+        <!-- Sol: içerik -->
+        <article class="lg:col-span-8">
+            <div class="rounded-2xl border border-gray-200 dark:border-gray-800 overflow-hidden bg-white dark:bg-gray-900 shadow-sm">
+                <!-- Kapak -->
+                <div class="relative">
+                    <img src="@Img()" alt="@Model.Name" class="w-full h-64 sm:h-80 object-cover">
+                    <div class="absolute inset-x-0 bottom-0 p-4 sm:p-6 bg-gradient-to-t from-black/40 to-transparent text-white">
+                        <div class="flex items-center gap-2 text-xs opacity-90">
+                            <a href="@Url.Action("Library","Exercise", new { region = (string?)null })" class="hover:underline">Exercises</a>
+                            <span>›</span>
+                            <a href="@Url.Action("Library","Exercise", new { region = (string?)null })" class="hover:underline">@Model.CategoryName</a>
+                        </div>
+                        <h1 class="mt-1 text-2xl sm:text-3xl font-bold">@Model.Name</h1>
+                    </div>
+
+                    <!-- Favori -->
+                    <button id="favBtn"
+                            class="absolute right-4 top-4 h-11 w-11 inline-flex items-center justify-center rounded-full
+                         bg-white/90 dark:bg-gray-900/90 border border-gray-200 dark:border-gray-800"
+                            title="Favori">
+                        <i id="favIcon" class="fa-@((Model.IsFavorite ? "solid" : "regular")) fa-heart text-rose-500 text-lg"></i>
+                    </button>
+                </div>
+
+                <!-- Meta + Notlar -->
+                <div class="p-4 sm:p-6 space-y-6">
+                    <!-- Rozetler -->
+                    <div class="flex flex-wrap gap-2 text-xs">
+                        <span class="rounded-full px-2 py-1 bg-indigo-100 text-indigo-700 dark:bg-indigo-900/40 dark:text-indigo-200">@Model.Mechanics</span>
+                        <span class="rounded-full px-2 py-1 bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-200">@Model.Equipment</span>
+                        <span class="rounded-full px-2 py-1 bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-200">@Model.Difficulty</span>
+                    </div>
+
+                    <!-- Kas grupları -->
+                    <div class="grid gap-4 sm:grid-cols-2">
+                        <div>
+                            <h3 class="text-sm font-semibold mb-1">Primary Muscles</h3>
+                            <p class="text-sm text-gray-700 dark:text-gray-300">
+                                @(string.IsNullOrWhiteSpace(Model.PrimaryMuscles) ? "—" : Model.PrimaryMuscles)
+                            </p>
+                        </div>
+                        <div>
+                            <h3 class="text-sm font-semibold mb-1">Secondary Muscles</h3>
+                            <p class="text-sm text-gray-700 dark:text-gray-300">
+                                @(string.IsNullOrWhiteSpace(Model.SecondaryMuscles) ? "—" : Model.SecondaryMuscles)
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Video / Link -->
+                    @if (!string.IsNullOrWhiteSpace(Model.VideoUrl))
+                    {
+                        <div>
+                            <h3 class="text-sm font-semibold mb-2">Video</h3>
+                            @if (embed is not null)
+                            {
+                                <div class="rounded-xl overflow-hidden border border-gray-200 dark:border-gray-800">
+                                    <div class="w-full aspect-video">
+                                        <iframe src="@embed" allowfullscreen class="w-full h-full"></iframe>
+                                    </div>
+                                </div>
+                            }
+                            else
+                            {
+                                <a href="@Model.VideoUrl" target="_blank" rel="noopener"
+                                   class="inline-flex items-center gap-2 px-3 py-2 rounded-xl border border-gray-200 dark:border-gray-800 hover:bg-gray-100 dark:hover:bg-gray-800 text-sm">
+                                    Videoyu aç
+                                </a>
+                            }
+                        </div>
+                    }
+
+                    <!-- Notlar -->
+                    @if (!string.IsNullOrWhiteSpace(Model.Notes))
+                    {
+                        <div>
+                            <h3 class="text-sm font-semibold mb-1">Notes</h3>
+                            <div class="text-sm whitespace-pre-wrap break-words text-gray-800 dark:text-gray-200">
+                                @Model.Notes
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </article>
+
+        <!-- Sağ: ilgili egzersizler -->
+        <aside class="lg:col-span-4">
+            <div class="rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-4 sm:p-6 sticky top-20">
+                <h2 class="text-lg font-semibold mb-3">İlgili Egzersizler</h2>
+
+                @if (Model.Related.Count == 0)
+                {
+                    <div class="text-sm text-gray-500 dark:text-gray-400">Bu kategori için başka egzersiz yok.</div>
+                }
+                else
+                {
+                    <ul class="space-y-3">
+                        @foreach (var e in Model.Related)
+                        {
+                            <li class="flex gap-3">
+                                <img src="@(string.IsNullOrWhiteSpace(e.Image) ? "https://via.placeholder.com/160x120?text=Exercise" : e.Image)"
+                                     alt="@e.Name" class="h-16 w-24 object-cover rounded-lg border border-gray-200 dark:border-gray-800">
+                                <div class="min-w-0">
+                                    <a href="@Url.Action("Detail","Exercise", new { id = e.Id })"
+                                       class="font-medium hover:underline line-clamp-1">@e.Name</a>
+                                    <div class="text-xs text-gray-500">@e.CategoryName</div>
+                                    <div class="mt-1 flex flex-wrap gap-1 text-[11px]">
+                                        <span class="rounded-full px-2 py-0.5 bg-indigo-100 text-indigo-700 dark:bg-indigo-900/40 dark:text-indigo-200">@e.Mechanics</span>
+                                        <span class="rounded-full px-2 py-0.5 bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-200">@e.Equipment</span>
+                                    </div>
+                                </div>
+                            </li>
+                        }
+                    </ul>
+                }
+            </div>
+        </aside>
+    </div>
+</section>
+
+@section Scripts {
+    <script>
+        // Favori toggle
+        (function(){
+          const btn = document.getElementById('favBtn');
+          const icn = document.getElementById('favIcon');
+          if(!btn || !icn) return;
+
+          btn.addEventListener('click', async ()=> {
+            try{
+              const r = await fetch('@Url.Action("ToggleFavorite", "Exercise", new { id = Model.Id })', {
+                method: 'POST', credentials: 'same-origin'
+              });
+              if(!r.ok) throw 0;
+              const data = await r.json();
+              icn.classList.toggle('fa-solid', !!data.favorite);
+              icn.classList.toggle('fa-regular', !data.favorite);
+            }catch(e){
+              alert('Favori işlemi sırasında bir hata oluştu.');
+            }
+          });
+        })();
+    </script>
+}

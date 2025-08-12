@@ -1,0 +1,155 @@
+﻿@model ExerciseLibraryVM
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string QP(object o) => Url.Action("Library", o)!;
+    string Active(bool ok) => ok
+        ? "text-indigo-600 bg-indigo-50 dark:bg-indigo-900/30"
+        : "text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800";
+}
+
+<section class="py-6">
+    <div class="mx-auto max-w-7xl grid gap-6 lg:grid-cols-12">
+
+        <!-- Kategori menüsü (sol) -->
+        <aside class="lg:col-span-3">
+            <div class="rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-4 sticky top-20">
+                <h2 class="font-semibold mb-3">Bölümler</h2>
+                <nav class="flex flex-wrap lg:flex-col gap-2">
+                    <a class="px-3 py-2 rounded-xl @Active(string.IsNullOrEmpty(Model.Region))"
+                       href="@QP(new { region = (string?)null, q = Model.Q, equipment=Model.Equipment, mechanics=Model.Mechanics, difficulty=Model.Difficulty })">
+                        Tümü
+                    </a>
+                    @foreach (var c in Model.Categories)
+                    {
+                        <a class="px-3 py-2 rounded-xl flex items-center justify-between @Active(Model.Region == c.Slug)"
+                           href="@QP(new { region = c.Slug, q = Model.Q, equipment=Model.Equipment, mechanics=Model.Mechanics, difficulty=Model.Difficulty })">
+                            <span><i class="fa-solid @(c.Icon ?? "fa-dumbbell") mr-2"></i>@c.Name</span>
+                            <span class="text-xs opacity-60">@c.Count</span>
+                        </a>
+                    }
+                </nav>
+            </div>
+        </aside>
+
+        <!-- Sağ: Liste -->
+        <main class="lg:col-span-9">
+            <div class="rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-4 sm:p-6">
+                <!-- Üst bar: başlık + arama + hızlı filtre -->
+                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                    <h1 class="text-2xl font-bold">
+                        @(
+                            string.IsNullOrEmpty(Model.Region)
+                            ? "Egzersiz Kütüphanesi"
+                            : Model.Categories.FirstOrDefault(c => c.Slug == Model.Region).Name
+                            )
+                    </h1>
+
+                    <form method="get" action="@Url.Action("Library")" class="flex items-center gap-2">
+                        <input type="hidden" name="region" value="@Model.Region" />
+                        <input name="q" value="@Model.Q" placeholder="Ara..."
+                               class="rounded-xl border border-gray-300 dark:border-gray-700 bg-transparent px-3 py-2 text-sm" />
+                        <button class="px-3 py-2 rounded-xl border border-gray-200 dark:border-gray-800 hover:bg-gray-100 dark:hover:bg-gray-800">
+                            Ara
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Filtreler -->
+                <div class="mt-4 flex flex-wrap items-center gap-2 text-sm">
+                    <span class="opacity-70 mr-2">Filtre:</span>
+
+                    @* Mechanics *@
+                    @{
+                        var mechAll = QP(new { region = Model.Region, q = Model.Q, equipment = Model.Equipment, difficulty = Model.Difficulty, mechanics = (string?)null });
+                        var mechComp = QP(new { region = Model.Region, q = Model.Q, equipment = Model.Equipment, difficulty = Model.Difficulty, mechanics = "Compound" });
+                        var mechIso = QP(new { region = Model.Region, q = Model.Q, equipment = Model.Equipment, difficulty = Model.Difficulty, mechanics = "Isolation" });
+                    }
+                    <a class="px-3 py-1.5 rounded-xl border @Active(string.IsNullOrEmpty(Model.Mechanics))" href="@mechAll">Hepsi</a>
+                    <a class="px-3 py-1.5 rounded-xl border @Active(Model.Mechanics=="Compound")" href="@mechComp">Compound</a>
+                    <a class="px-3 py-1.5 rounded-xl border @Active(Model.Mechanics=="Isolation")" href="@mechIso">Isolation</a>
+
+                    @* Equipment *@
+                    @{
+                        string Eq(string? e) => QP(new { region = Model.Region, q = Model.Q, mechanics = Model.Mechanics, difficulty = Model.Difficulty, equipment = e });
+                    }
+                    <span class="opacity-50 mx-1">|</span>
+                    <a class="px-3 py-1.5 rounded-xl border @Active(Model.Equipment=="Bodyweight")" href="@Eq("Bodyweight")">Bodyweight</a>
+                    <a class="px-3 py-1.5 rounded-xl border @Active(Model.Equipment=="Dumbbell")" href="@Eq("Dumbbell")">Dumbbell</a>
+                    <a class="px-3 py-1.5 rounded-xl border @Active(Model.Equipment=="Barbell")" href="@Eq("Barbell")">Barbell</a>
+                    <a class="px-3 py-1.5 rounded-xl border @Active(Model.Equipment=="Machine")" href="@Eq("Machine")">Machine</a>
+
+                    @* Difficulty *@
+                    @{
+                        string Df(string? d) => QP(new { region = Model.Region, q = Model.Q, mechanics = Model.Mechanics, equipment = Model.Equipment, difficulty = d });
+                    }
+                    <span class="opacity-50 mx-1">|</span>
+                    <a class="px-3 py-1.5 rounded-xl border @Active(Model.Difficulty=="Beginner")" href="@Df("Beginner")">Beginner</a>
+                    <a class="px-3 py-1.5 rounded-xl border @Active(Model.Difficulty=="Intermediate")" href="@Df("Intermediate")">Intermediate</a>
+                    <a class="px-3 py-1.5 rounded-xl border @Active(Model.Difficulty=="Advanced")" href="@Df("Advanced")">Advanced</a>
+                </div>
+
+                <!-- Grid -->
+                <div class="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                    @foreach (var e in Model.Items)
+                    {
+                        <article class="rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 overflow-hidden hover:shadow-md transition">
+                            <div class="h-40 bg-gray-100 dark:bg-gray-800">
+                                <img src="@(string.IsNullOrWhiteSpace(e.Image) ? "https://via.placeholder.com/800x600?text=Exercise" : e.Image)"
+                                     alt="@e.Name" class="h-40 w-full object-cover">
+                            </div>
+                            <div class="p-4 space-y-2">
+                                <h3 class="font-semibold line-clamp-1">@e.Name</h3>
+                                <div class="text-xs text-gray-500">@e.CategoryName</div>
+                                <div class="flex flex-wrap gap-2 text-xs">
+                                    <span class="rounded-full px-2 py-1 bg-indigo-100 text-indigo-700 dark:bg-indigo-900/40 dark:text-indigo-200">@e.Mechanics</span>
+                                    <span class="rounded-full px-2 py-1 bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-200">@e.Equipment</span>
+                                    <span class="rounded-full px-2 py-1 bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-200">@e.Difficulty</span>
+                                </div>
+                                <div class="pt-2">
+                                    <a href="@Url.Action("Detail","Exercise", new { id = e.Id })"
+                                       class="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl border border-gray-200 dark:border-gray-800 hover:bg-gray-100 dark:hover:bg-gray-800 text-sm">
+                                        Detay
+                                    </a>
+                                </div>
+                            </div>
+                        </article>
+                    }
+                </div>
+
+                <!-- Pagination -->
+                @if (Model.TotalPages > 1)
+                {
+                    <nav class="mt-8 flex items-center justify-center gap-2">
+                        @{
+                            int prev = Math.Max(1, Model.Page - 1);
+                            int next = Math.Min(Model.TotalPages, Model.Page + 1);
+                            Func<int, string> P = p => QP(new
+                            {
+                                region = Model.Region,
+                                q = Model.Q,
+                                equipment = Model.Equipment,
+                                mechanics = Model.Mechanics,
+                                difficulty = Model.Difficulty,
+                                page = p,
+                                pageSize = Model.PageSize
+                            });
+                        }
+                        <a class="px-3 py-2 text-sm rounded-xl border border-gray-200 dark:border-gray-800 hover:bg-gray-100 dark:hover:bg-gray-800 transition
+                      @(Model.Page == 1 ? "opacity-50 pointer-events-none" : "")" href="@P(prev)">Prev</a>
+
+                        @for (int i = 1; i <= Model.TotalPages; i++)
+                        {
+                            <a class="px-3 py-2 text-sm rounded-xl border transition
+                        @(i == Model.Page
+                          ? "border-indigo-300 bg-indigo-50 text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-200"
+                          : "border-gray-200 dark:border-gray-800 hover:bg-gray-100 dark:hover:bg-gray-800")" href="@P(i)">@i</a>
+                        }
+
+                        <a class="px-3 py-2 text-sm rounded-xl border border-gray-200 dark:border-gray-800 hover:bg-gray-100 dark:hover:bg-gray-800 transition
+                      @(Model.Page == Model.TotalPages ? "opacity-50 pointer-events-none" : "")" href="@P(next)">Next</a>
+                    </nav>
+                }
+            </div>
+        </main>
+    </div>
+</section>
