@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RapidApiProject.Context;
 
@@ -11,9 +12,11 @@ using RapidApiProject.Context;
 namespace RapidApiProject.Migrations
 {
     [DbContext(typeof(ListContext))]
-    partial class ListContextModelSnapshot : ModelSnapshot
+    [Migration("20250814122615_Training_Init")]
+    partial class Training_Init
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
