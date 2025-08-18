@@ -140,6 +140,61 @@ namespace RapidApiProject.Controllers
             await _db.SaveChangesAsync();
             return Ok(new { ok = true, favorite = e.IsFavorite });
         }
+        [HttpGet]
+        public async Task<IActionResult> RegionList(string region, string? q, int take = 60)
+        {
+            if (string.IsNullOrWhiteSpace(region))
+                return Json(new { ok = false, items = Array.Empty<object>(), message = "Bölge boş." });
 
+            region = region.Trim().ToLowerInvariant();
+
+            // Alt bölge -> ana kategori eşlemesi (ExerciseCategories.Slug ile eşleşmeli)
+            var toMain = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+            {
+                ["biceps"] = "arms",
+                ["forearms"] = "arms",
+                ["triceps"] = "arms",
+
+                ["quads"] = "legs",
+                ["hamstrings"] = "legs",
+                ["calves"] = "legs",
+
+                ["traps"] = "back",
+                ["lats"] = "back",
+                ["lower-back"] = "back",
+                ["rear-delts"] = "shoulders"
+            };
+
+            var main = toMain.TryGetValue(region, out var m) ? m : region;
+
+            var query = _db.Exercises
+                .Include(e => e.Category)
+                .AsNoTracking()
+                .Where(e => e.Category.Slug == main);
+
+            // İsteğe bağlı arama
+            if (!string.IsNullOrWhiteSpace(q))
+            {
+                q = q.Trim();
+                query = query.Where(e =>
+                    EF.Functions.Like(e.Name, $"%{q}%") ||
+                    (e.PrimaryMuscles != null && EF.Functions.Like(e.PrimaryMuscles, $"%{q}%")) ||
+                    (e.SecondaryMuscles != null && EF.Functions.Like(e.SecondaryMuscles, $"%{q}%")));
+            }
+
+            var items = await query
+                .OrderBy(e => e.Name)
+                .Take(Math.Max(1, take))
+                .Select(e => new
+                {
+                    id = e.Id,
+                    name = e.Name,
+                    cat = e.Category.Name,
+                    img = e.Image
+                })
+                .ToListAsync();
+
+            return Json(new { ok = true, region, items });
+        }
     }
 }

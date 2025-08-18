@@ -1,12 +1,12 @@
 ﻿// wwwroot/js/exercises.js
 
-// Bölgelerin görünen adları
 const REGION_LABELS = {
     chest: "Göğüs",
     abs: "Karın",
     shoulders: "Omuz",
     biceps: "Biceps",
     forearms: "Ön Kol",
+    triceps: "Arka Kol",
     quads: "Quadriceps",
     calves: "Baldır",
     traps: "Trapez",
@@ -17,22 +17,8 @@ const REGION_LABELS = {
     hamstrings: "Arka Bacak (Hamstring)"
 };
 
-// Demo verisi (sonra API bağlayacağız)
-const DEMO = {
-    chest: ["Bench Press", "Incline DB Press", "Dips", "Cable Fly"],
-    abs: ["Plank", "Hanging Leg Raise", "Cable Crunch"],
-    shoulders: ["Overhead Press", "Lateral Raise", "Front Raise"],
-    biceps: ["Barbell Curl", "Incline DB Curl", "Hammer Curl"],
-    forearms: ["Reverse Curl", "Wrist Curl"],
-    quads: ["Back Squat", "Leg Press", "Bulgarian Split Squat"],
-    calves: ["Standing Calf Raise", "Seated Calf Raise"],
-    traps: ["Barbell Shrug", "Face Pull"],
-    "rear-delts": ["Reverse Pec Deck", "Bent-Over Lateral Raise"],
-    lats: ["Pull-up", "Lat Pulldown", "One-arm Row"],
-    "lower-back": ["Back Extension", "Good Morning"],
-    glutes: ["Hip Thrust", "Glute Bridge", "Cable Kickback"],
-    hamstrings: ["Romanian Deadlift", "Leg Curl", "Good Morning"]
-};
+const cfg = window.ExerciseCfg || { urls: {} };
+const API = cfg.urls || {};
 
 const bodyFront = document.getElementById("bodyFront");
 const bodyBack = document.getElementById("bodyBack");
@@ -41,10 +27,15 @@ const listEl = document.getElementById("exerciseList");
 const titleEl = document.getElementById("regionTitle");
 const searchEl = document.getElementById("searchInput");
 
+// yeni elemanlar
+const sideBadge = document.getElementById("sideBadge");
+const btnFront = document.getElementById("btnFront");
+const btnBack = document.getElementById("btnBack");
+
 let currentRegion = null;
 let currentSide = "front";
 
-// Bölge vurgulama stili (Tailwind class'ları)
+// Bölge vurgulama stili
 const ACTIVE_FILL = "fill-indigo-400/40 stroke-indigo-600";
 const INACTIVE_FILL = "fill-transparent stroke-gray-300 dark:stroke-gray-700";
 const HOVER_FILL = "hover:fill-indigo-300/40 hover:stroke-indigo-500 cursor-pointer";
@@ -54,20 +45,39 @@ const HOVER_FILL = "hover:fill-indigo-300/40 hover:stroke-indigo-500 cursor-poin
     el.setAttribute("vector-effect", "non-scaling-stroke");
     el.setAttribute("stroke-width", "2");
     el.classList.add(...INACTIVE_FILL.split(" "), ...HOVER_FILL.split(" "));
-
     el.addEventListener("click", () => {
         const region = el.getAttribute("data-region");
         selectRegion(region);
     });
 });
 
-// Bölge seçimi
+function updateSideUI() {
+    // görünür panel
+    bodyFront.classList.toggle("hidden", currentSide !== "front");
+    bodyBack.classList.toggle("hidden", currentSide !== "back");
+
+    // rozet metni
+    if (sideBadge) sideBadge.innerHTML = (currentSide === "front")
+        ? `<i class="fa-regular fa-circle-dot"></i> Ön`
+        : `<i class="fa-regular fa-circle-dot"></i> Arka`;
+
+    // sekmelerin aktifliği
+    if (btnFront && btnBack) {
+        if (currentSide === "front") {
+            btnFront.classList.add("bg-indigo-50", "dark:bg-indigo-900/30", "text-indigo-700", "dark:text-indigo-200");
+            btnBack.classList.remove("bg-indigo-50", "dark:bg-indigo-900/30", "text-indigo-700", "dark:text-indigo-200");
+        } else {
+            btnBack.classList.add("bg-indigo-50", "dark:bg-indigo-900/30", "text-indigo-700", "dark:text-indigo-200");
+            btnFront.classList.remove("bg-indigo-50", "dark:bg-indigo-900/30", "text-indigo-700", "dark:text-indigo-200");
+        }
+    }
+}
+
 function selectRegion(region) {
     currentRegion = region;
 
-    // Önce tüm bölgeleri pasifleştir
+    // Tüm bölgeleri pasifleştir
     [...document.querySelectorAll("#bodyFront .region, #bodyBack .region")].forEach(el => {
-        el.classList.remove(...ACTIVE_FILL.split(" "));
         ACTIVE_FILL.split(" ").forEach(c => el.classList.remove(c));
         INACTIVE_FILL.split(" ").forEach(c => el.classList.add(c));
     });
@@ -79,47 +89,75 @@ function selectRegion(region) {
         ACTIVE_FILL.split(" ").forEach(c => el.classList.add(c));
     });
 
-    renderList();
+    loadRegionList();
 }
 
-// Listeyi doldur (şimdilik DEMO; sonra fetch)
-function renderList() {
+// Listeyi DB’den getir
+async function loadRegionList() {
     const label = REGION_LABELS[currentRegion] || "Bölge";
     titleEl.textContent = label;
 
-    const items = (DEMO[currentRegion] || []);
-    const q = (searchEl?.value || "").trim().toLowerCase();
-    const filtered = q ? items.filter(x => x.toLowerCase().includes(q)) : items;
+    listEl.innerHTML = `<li class="py-3 text-sm text-gray-500 dark:text-gray-400">Yükleniyor…</li>`;
 
+    try {
+        const url = new URL(API.regionList, window.location.origin);
+        url.searchParams.set("region", currentRegion || "");
+        const q = (searchEl?.value || "").trim();
+        if (q) url.searchParams.set("q", q);
+
+        const r = await fetch(url.toString(), { credentials: "same-origin" });
+        if (!r.ok) throw new Error("HTTP " + r.status);
+        const data = await r.json();
+        const items = (data && data.ok && Array.isArray(data.items)) ? data.items : [];
+        renderList(items);
+    } catch (err) {
+        console.error("[exercise] region list error:", err);
+        listEl.innerHTML = `<li class="py-3 text-sm text-rose-600">Liste getirilemedi.</li>`;
+    }
+}
+
+function renderList(items) {
+    const ph = "https://via.placeholder.com/800x600?text=Exercise";
     listEl.innerHTML = "";
-    if (!filtered.length) {
+
+    if (!items.length) {
         listEl.innerHTML = `<li class="py-3 text-sm text-gray-500 dark:text-gray-400">Bu bölge için sonuç yok.</li>`;
         return;
     }
 
-    filtered.forEach(name => {
+    items.forEach(x => {
         const li = document.createElement("li");
-        li.className = "py-3 flex items-center justify-between";
+        li.className = "py-3 flex items-center justify-between gap-3";
         li.innerHTML = `
-      <div class="min-w-0">
-        <div class="font-medium truncate">${name}</div>
-        <div class="text-xs text-gray-500">Set/tekrar rehberi yakında</div>
+      <div class="flex items-center gap-3 min-w-0">
+        <img src="${x.img || ph}"
+             class="h-16 w-16 sm:h-20 sm:w-20 lg:h-24 lg:w-24 rounded-xl object-cover border border-gray-200 dark:border-gray-800 flex-shrink-0"
+             alt="${x.name}">
+        <div class="min-w-0">
+          <div class="font-medium truncate">${x.name}</div>
+          <div class="text-xs text-gray-500 dark:text-gray-400 truncate">${x.cat || ""}</div>
+        </div>
       </div>
-      <button class="px-2 py-1 rounded-lg border border-gray-200 dark:border-gray-800 text-xs hover:bg-gray-100 dark:hover:bg-gray-800">Detay</button>`;
+      <a href="${window.location.origin}/Exercise/Detail/${x.id}"
+         class="px-2 py-1 rounded-lg border border-gray-200 dark:border-gray-800 text-xs hover:bg-gray-100 dark:hover:bg-gray-800">
+         Detay
+      </a>`;
         listEl.appendChild(li);
     });
 }
 
-// Arama
-searchEl?.addEventListener("input", () => renderList());
+// Arama (aktif bölge varsa canlı filtre)
+searchEl?.addEventListener("input", () => {
+    if (currentRegion) loadRegionList();
+});
 
-// Ön/arka çevir
+// Ön/Arka çevir
 flipBtn?.addEventListener("click", () => {
     currentSide = (currentSide === "front" ? "back" : "front");
-    bodyFront.classList.toggle("hidden", currentSide !== "front");
-    bodyBack.classList.toggle("hidden", currentSide !== "back");
 
-    // Yan tarafta aynı bölgenin arka/ön karşılığı yoksa vurguyu sıfırla
+    updateSideUI();
+
+    // Yeni yüzde aynı region yoksa sıfırla
     if (currentRegion) {
         const scope = (currentSide === "front" ? "#bodyFront" : "#bodyBack");
         const exists = document.querySelector(`${scope} .region[data-region="${currentRegion}"]`);
@@ -133,4 +171,13 @@ flipBtn?.addEventListener("click", () => {
     }
 });
 
-// Varsayılan: ön yüz açık
+// Sekmeler ile geçiş
+btnFront?.addEventListener("click", () => {
+    if (currentSide !== "front") { currentSide = "front"; updateSideUI(); if (currentRegion) selectRegion(currentRegion); }
+});
+btnBack?.addEventListener("click", () => {
+    if (currentSide !== "back") { currentSide = "back"; updateSideUI(); if (currentRegion) selectRegion(currentRegion); }
+});
+
+// ilk UI durumu
+updateSideUI();

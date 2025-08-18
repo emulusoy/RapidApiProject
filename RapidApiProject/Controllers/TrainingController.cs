@@ -1,10 +1,11 @@
-﻿using System.Globalization;
-using System;
+﻿using System.Text.Json;
+using System.Globalization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using RapidApiProject.Context;
 using RapidApiProject.Entities;
-using Microsoft.EntityFrameworkCore;
 using RapidApiProject.Models;
+using System.ComponentModel.DataAnnotations;
 
 namespace RapidApiProject.Controllers
 {
@@ -13,257 +14,209 @@ namespace RapidApiProject.Controllers
         private readonly ListContext _db;
         public TrainingController(ListContext db) => _db = db;
 
-        // Yardımcı: haftanın pazartesi tarihini bul
-        private static DateTime StartOfWeek(DateTime d)
+        [HttpGet]
+        public IActionResult PlanBuilder()
         {
-            var diff = (7 + (int)d.DayOfWeek - (int)DayOfWeek.Monday) % 7;
-            return d.Date.AddDays(-diff);
+            var vm = new PlanBuilderVM
+            {
+                Title = "",
+                Items = new List<PlanBuilderItemVM>()
+            };
+            return View(vm);
+        }
+        [HttpGet]
+        public async Task<IActionResult> SearchExercises(string? q, string? region, int take = 50)
+        {
+            try
+            {
+                var query = _db.Exercises
+                    .Include(e => e.Category)
+                    .AsNoTracking()
+                    .AsQueryable();
+
+                if (!string.IsNullOrWhiteSpace(region))
+                    query = query.Where(e => e.Category != null && e.Category.Slug == region);
+
+                if (!string.IsNullOrWhiteSpace(q))
+                    query = query.Where(e => e.Name.Contains(q));
+
+                var items = await query
+                    .OrderBy(e => e.Name)
+                    .Take(take)
+                    .Select(e => new
+                    {
+                        id = e.Id,
+                        name = e.Name,
+                        cat = e.Category != null ? e.Category.Name : null,
+                        mech = e.Mechanics,
+                        eq = e.Equipment,
+                        diff = e.Difficulty,
+                        img = e.Image // DB'de yoksa placeholder kullanacağız (JS tarafı)
+                    })
+                    .ToListAsync();
+
+                return Ok(new { ok = true, items });
+            }
+            catch (Exception ex)
+            {
+                // burada loglayabilirsiniz (ex.ToString())
+                return StatusCode(500, new { ok = false, message = ex.Message });
+            }
+        }
+        public class SavePlanItemDto
+        {
+            public int exerciseId { get; set; }
+            public int? sets { get; set; }
+            public string? reps { get; set; }
+            public int? restSec { get; set; }
+            public int sort { get; set; }
         }
 
-        // GET /Training/Planner?start=2025-08-11
-        [HttpGet]
-        public async Task<IActionResult> Planner(string? start = null)
+        [HttpPost]
+        [IgnoreAntiforgeryToken]
+        public async Task<IActionResult> SavePlan([FromForm, Required] string title, [FromForm, Required] string itemsJson)
         {
-            var userId = "demo"; // Auth varsa buraya User.Identity.Name gibi koy
-            DateTime weekStart = string.IsNullOrWhiteSpace(start)
-                ? StartOfWeek(DateTime.Today)
-                : DateTime.ParseExact(start, "yyyy-MM-dd", CultureInfo.InvariantCulture);
-            DateTime weekEnd = weekStart.AddDays(6);
+            if (string.IsNullOrWhiteSpace(title)) return BadRequest(new { ok = false, message = "Başlık gerekli." });
 
-            // 1) O hafta için (varsa) planı al, yoksa oluştur
-            var program = await _db.TrainingPrograms
-                .FirstOrDefaultAsync(p => p.UserId == userId && p.StartDate == weekStart);
-
-            if (program == null)
+            List<SavePlanItemDto>? items;
+            try
             {
-                program = new TrainingProgram
-                {
-                    Title = $"Hafta {weekStart:dd.MM} - {weekEnd:dd.MM}",
-                    UserId = userId,
-                    StartDate = weekStart,
-                    EndDate = weekEnd,
-                    IsTemplate = false
-                };
-                _db.TrainingPrograms.Add(program);
-                await _db.SaveChangesAsync();
-
-                // 2) 7 gün oluştur
-                for (int i = 0; i < 7; i++)
-                {
-                    _db.TrainingDays.Add(new TrainingDay
-                    {
-                        ProgramId = program.Id,
-                        DayDate = weekStart.AddDays(i),
-                        Title = weekStart.AddDays(i).ToString("dddd", new CultureInfo("tr-TR"))
-                    });
-                }
-                await _db.SaveChangesAsync();
+                items = JsonSerializer.Deserialize<List<SavePlanItemDto>>(itemsJson,
+                    new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+            }
+            catch
+            {
+                return BadRequest(new { ok = false, message = "Geçersiz veri." });
             }
 
-            // 3) Gün + öğeler
-            var days = await _db.TrainingDays
-                .Where(d => d.ProgramId == program.Id)
-                .OrderBy(d => d.DayDate)
-                .ToListAsync();
+            if (items == null || items.Count == 0)
+                return BadRequest(new { ok = false, message = "En az bir egzersiz ekleyin." });
 
-            var items = await _db.TrainingItems
-                .Where(i => days.Select(d => d.Id).Contains(i.DayId))
-                .OrderBy(i => i.SortOrder)
-                .ThenBy(i => i.Id)
-                .Select(i => new
-                {
-                    i.Id,
-                    i.DayId,
-                    i.Sets,
-                    i.Reps,
-                    i.RestSec,
-                    i.Notes,
-                    Exercise = new
-                    {
-                        i.ExerciseId,
-                        Name = i.Exercise.Name,
-                        Eq = i.Exercise.Equipment,
-                        Diff = i.Exercise.Difficulty,
-                        Mech = i.Exercise.Mechanics
-                    }
-                })
-                .ToListAsync();
+            var userId = "demo"; // Auth ekleyince User.Identity.Name vb.
 
-            var vm = new TrainingPlannerVM
+            // Program (şablon amaçlı)
+            var program = new TrainingProgram
+            {
+                Title = title.Trim(),
+                UserId = userId,
+                StartDate = DateTime.Today,
+                EndDate = DateTime.Today,
+                IsTemplate = true
+            };
+            _db.TrainingPrograms.Add(program);
+            await _db.SaveChangesAsync();
+
+            // Tek gün (konteyner)
+            var day = new TrainingDay
             {
                 ProgramId = program.Id,
-                WeekStart = weekStart,
-                Days = days.Select(d => new PlannerDayVM
+                Title = "Plan",
+                DayDate = DateTime.Today
+            };
+            _db.TrainingDays.Add(day);
+            await _db.SaveChangesAsync();
+
+            // Öğeler
+            int order = 0;
+            foreach (var it in items.OrderBy(x => x.sort))
+            {
+                _db.TrainingItems.Add(new TrainingItem
                 {
-                    DayId = d.Id,
-                    Date = d.DayDate ?? weekStart,
-                    Title = d.Title ?? d.DayDate?.ToString("dddd", new CultureInfo("tr-TR")) ?? "",
-                    Items = items.Where(x => x.DayId == d.Id)
-                                 .Select(x => new PlannerItemVM
-                                 {
-                                     ItemId = x.Id,
-                                     ExerciseId = x.Exercise.ExerciseId,
-                                     ExerciseName = x.Exercise.Name,
-                                     Equipment = x.Exercise.Eq,
-                                     Mechanics = x.Exercise.Mech,
-                                     Difficulty = x.Exercise.Diff,
-                                     Sets = x.Sets,
-                                     Reps = x.Reps,
-                                     RestSec = x.RestSec
-                                 }).ToList()
+                    DayId = day.Id,
+                    ExerciseId = it.exerciseId,
+                    SortOrder = order++,
+                    Sets = it.sets,
+                    Reps = it.reps,
+                    RestSec = it.restSec
+                });
+            }
+            await _db.SaveChangesAsync();
+
+            // Artık Planlar listesine dönelim
+            return Ok(new { ok = true, id = program.Id, redirect = Url.Action("MyPlans") });
+        }
+
+        // ---------- YENİ: Planlarım (kart listesi) ----------
+        [HttpGet]
+        public async Task<IActionResult> MyPlans()
+        {
+            var userId = "demo";
+
+            var list = await _db.TrainingPrograms
+                .Where(p => p.UserId == userId && p.IsTemplate)
+                .Select(p => new
+                {
+                    p.Id,
+                    p.Title,
+                    FirstImg = p.Days
+                        .SelectMany(d => d.Items)
+                        .OrderBy(i => i.SortOrder)
+                        .Select(i => i.Exercise.Image)
+                        .FirstOrDefault(),
+                    Count = p.Days.SelectMany(d => d.Items).Count()
+                })
+                .OrderByDescending(x => x.Id)
+                .ToListAsync();
+
+            var vm = new PlanListVM
+            {
+                Plans = list.Select(x => new PlanCardVM
+                {
+                    Id = x.Id,
+                    Title = x.Title,
+                    FirstImage = string.IsNullOrWhiteSpace(x.FirstImg)
+                        ? "https://via.placeholder.com/800x600?text=Exercise"
+                        : x.FirstImg,
+                    ItemCount = x.Count
                 }).ToList()
             };
 
             return View(vm);
         }
 
-        // API: egzersiz arama (liste paneli doldurmak için)
-        // GET /Training/SearchExercises?q=press&region=chest&take=50
+        // (Opsiyonel) Detay sayfası
         [HttpGet]
-        public async Task<IActionResult> SearchExercises(string? q, string? region, int take = 50)
+        public async Task<IActionResult> PlanDetail(int id)
         {
-            var query = _db.Exercises.Include(e => e.Category).AsNoTracking();
+            var program = await _db.TrainingPrograms
+                .Include(p => p.Days)
+                    .ThenInclude(d => d.Items)
+                        .ThenInclude(i => i.Exercise)
+                .ThenInclude(e => e.Category)
+                .AsNoTracking()
+                .FirstOrDefaultAsync(p => p.Id == id && p.IsTemplate);
 
-            if (!string.IsNullOrWhiteSpace(region))
-                query = query.Where(e => e.Category.Slug == region);
+            if (program == null) return NotFound();
 
-            if (!string.IsNullOrWhiteSpace(q))
-                query = query.Where(e => e.Name.Contains(q));
+            var allItems = program.Days
+                .SelectMany(d => d.Items)
+                .OrderBy(i => i.SortOrder)
+                .ToList();
 
-            var list = await query.OrderBy(e => e.Name).Take(take)
-                .Select(e => new
+            var vm = new PlanDetailVM
+            {
+                Id = program.Id,
+                Title = program.Title,
+                CoverImage = allItems.Select(i => i.Exercise.Image)
+                                     .FirstOrDefault(x => !string.IsNullOrWhiteSpace(x))
+                             ?? "https://via.placeholder.com/800x600?text=Exercise",
+                TotalItems = allItems.Count,
+                Items = allItems.Select((i, idx) => new PlanDetailItemVM
                 {
-                    id = e.Id,
-                    name = e.Name,
-                    cat = e.Category.Name,
-                    eq = e.Equipment,
-                    diff = e.Difficulty,
-                    mech = e.Mechanics
-                }).ToListAsync();
-            return Json(list);
-        }
+                    Order = idx + 1,
+                    ExerciseId = i.ExerciseId,
+                    Name = i.Exercise.Name,
+                    Image = string.IsNullOrWhiteSpace(i.Exercise.Image)
+                                ? "https://via.placeholder.com/800x600?text=Exercise"
+                                : i.Exercise.Image,
+                    Category = i.Exercise.Category != null ? i.Exercise.Category.Name : null,
+                    Sets = i.Sets,
+                    Reps = i.Reps,
+                    RestSec = i.RestSec
+                }).ToList()
+            };
 
-        // API: güne item ekle
-        [HttpPost]
-        public async Task<IActionResult> AddItem([FromForm] int dayId, [FromForm] int exerciseId,
-                                                 [FromForm] int? sets, [FromForm] string? reps, [FromForm] int? restSec)
-        {
-            var maxSort = await _db.TrainingItems.Where(i => i.DayId == dayId)
-                            .MaxAsync(i => (int?)i.SortOrder) ?? -1;
-
-            _db.TrainingItems.Add(new TrainingItem
-            {
-                DayId = dayId,
-                ExerciseId = exerciseId,
-                SortOrder = maxSort + 1,
-                Sets = sets,
-                Reps = reps,
-                RestSec = restSec
-            });
-            await _db.SaveChangesAsync();
-            return Ok(new { ok = true });
-        }
-
-        // API: item sil
-        [HttpPost]
-        public async Task<IActionResult> RemoveItem([FromForm] int id)
-        {
-            var it = await _db.TrainingItems.FindAsync(id);
-            if (it == null) return NotFound();
-            _db.TrainingItems.Remove(it);
-            await _db.SaveChangesAsync();
-            return Ok(new { ok = true });
-        }
-
-        // API: item gün değiştir (taşıma)
-        [HttpPost]
-        public async Task<IActionResult> MoveItem([FromForm] int id, [FromForm] int toDayId)
-        {
-            var it = await _db.TrainingItems.FindAsync(id);
-            if (it == null) return NotFound();
-            it.DayId = toDayId;
-            it.SortOrder = (await _db.TrainingItems.Where(x => x.DayId == toDayId)
-                         .MaxAsync(x => (int?)x.SortOrder)) ?? -1;
-            it.SortOrder++;
-            await _db.SaveChangesAsync();
-            return Ok(new { ok = true });
-        }
-
-        // HAZIR ŞABLONLAR: FullBody-3, PPL, UpperLower
-        // POST /Training/ApplyTemplate
-        [HttpPost]
-        public async Task<IActionResult> ApplyTemplate([FromForm] int programId, [FromForm] string template)
-        {
-            var days = await _db.TrainingDays.Where(d => d.ProgramId == programId)
-                         .OrderBy(d => d.DayDate).ToListAsync();
-            if (days.Count < 7) return BadRequest();
-
-            // Yardımcı: isimle egzersizId bul
-            async Task<int?> E(string name)
-                => await _db.Exercises.Where(e => e.Name == name).Select(e => (int?)e.Id).FirstOrDefaultAsync();
-
-            // Basit hazır set (örnek)
-            async Task Add(int dayIndex, string name, int sets, string reps, int rest)
-            {
-                var exId = await E(name); if (exId == null) return;
-                _db.TrainingItems.Add(new TrainingItem
-                {
-                    DayId = days[dayIndex].Id,
-                    ExerciseId = exId.Value,
-                    SortOrder = 999,
-                    Sets = sets,
-                    Reps = reps,
-                    RestSec = rest
-                });
-            }
-
-            if (template == "fullbody-3")
-            {
-                // Pzt / Çrş / Cum
-                await Add(0, "Back Squat", 5, "5", 120);
-                await Add(0, "Barbell Bench Press", 5, "5", 120);
-                await Add(0, "Barbell Bent-Over Row", 4, "8", 90);
-                await Add(2, "Deadlift", 3, "5", 150);
-                await Add(2, "Overhead Press (Barbell)", 5, "5", 120);
-                await Add(2, "Pull-up", 4, "6-8", 90);
-                await Add(4, "Walking Lunge", 4, "10", 90);
-                await Add(4, "Incline Dumbbell Press", 4, "8-10", 90);
-                await Add(4, "Lat Pulldown (Wide Grip)", 4, "10", 90);
-            }
-            else if (template == "ppl")
-            {
-                // Push / Pull / Legs (Pzt/Sali/Cars) + tekrar
-                await Add(0, "Barbell Bench Press", 5, "5", 120);
-                await Add(0, "Overhead Press (Barbell)", 4, "6-8", 120);
-                await Add(1, "Pull-up", 5, "5", 120);
-                await Add(1, "Seated Cable Row", 4, "8-10", 90);
-                await Add(2, "Back Squat", 5, "5", 120);
-                await Add(2, "Romanian Deadlift", 4, "6-8", 120);
-            }
-            else if (template == "upper-lower")
-            {
-                await Add(0, "Incline Barbell Bench Press", 5, "5", 120);
-                await Add(0, "Barbell Bent-Over Row", 5, "5", 120);
-                await Add(1, "Back Squat", 5, "5", 120);
-                await Add(1, "Romanian Deadlift", 4, "6-8", 120);
-                await Add(3, "Dumbbell Bench Press", 4, "8-10", 90);
-                await Add(3, "Lat Pulldown (Close Grip)", 4, "10", 90);
-                await Add(4, "Front Squat", 5, "3-5", 150);
-                await Add(4, "Walking Lunge", 4, "10", 90);
-            }
-
-            await _db.SaveChangesAsync();
-            // sortorder düzelt
-            var grouped = await _db.TrainingItems.Where(i => days.Select(d => d.Id).Contains(i.DayId))
-                            .OrderBy(i => i.SortOrder).ThenBy(i => i.Id).ToListAsync();
-            foreach (var g in grouped.GroupBy(x => x.DayId))
-            {
-                int s = 0;
-                foreach (var it in g) it.SortOrder = s++;
-            }
-            await _db.SaveChangesAsync();
-
-            return Ok(new { ok = true });
+            return View(vm);
         }
     }
 }

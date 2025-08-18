@@ -1,0 +1,86 @@
+﻿@model RapidApiProject.Models.PlanDetailVM
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Plan Detay";
+}
+
+<section class="py-6">
+    <div class="mx-auto max-w-7xl">
+        @Html.Partial("_TrainingNav")
+
+        <!-- Başlık + Kronometre -->
+        <div class="rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-4 sm:p-6 shadow-sm">
+            <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                <div class="flex items-center gap-4">
+                    <img src="@Model.CoverImage" class="h-20 w-20 rounded-xl object-cover border border-gray-200 dark:border-gray-800" alt="@Model.Title" />
+                    <div>
+                        <h1 class="text-2xl font-bold tracking-tight">@Model.Title</h1>
+                        <div class="text-sm opacity-70">@Model.TotalItems adet egzersiz</div>
+                    </div>
+                </div>
+
+                <!-- Kronometre -->
+                <div class="rounded-xl border border-gray-200 dark:border-gray-800 p-3 sm:p-4">
+                    <div class="text-center">
+                        <div id="swTime" class="text-3xl font-mono tabular-nums">00:00.0</div>
+                        <div class="mt-2 flex items-center justify-center gap-2">
+                            <button id="swStart" class="px-3 py-1.5 rounded-lg bg-emerald-600 text-white hover:bg-emerald-700">Başlat</button>
+                            <button id="swPause" class="px-3 py-1.5 rounded-lg border border-gray-200 dark:border-gray-800">Duraklat</button>
+                            <button id="swReset" class="px-3 py-1.5 rounded-lg border border-gray-200 dark:border-gray-800">Sıfırla</button>
+                        </div>
+                        <div class="mt-2 flex items-center justify-center gap-2 text-xs">
+                            <span class="opacity-70">Dinlen:</span>
+                            <button class="rest-quick px-2 py-1 rounded-lg border border-gray-200 dark:border-gray-800" data-sec="30">30sn</button>
+                            <button class="rest-quick px-2 py-1 rounded-lg border border-gray-200 dark:border-gray-800" data-sec="60">60sn</button>
+                            <button class="rest-quick px-2 py-1 rounded-lg border border-gray-200 dark:border-gray-800" data-sec="90">90sn</button>
+                            <span id="restCountdown" class="ml-2 font-mono"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Egzersiz Listesi -->
+        <div class="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            @foreach (var it in Model.Items)
+            {
+                <article class="group rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 overflow-hidden shadow-sm">
+                    <div class="aspect-square w-full overflow-hidden">
+                        <img src="@it.Image" alt="@it.Name" class="h-full w-full object-cover" />
+                    </div>
+                    <div class="p-4 space-y-2">
+                        <div class="flex items-start justify-between gap-2">
+                            <div class="min-w-0">
+                                <div class="text-sm opacity-70">#@it.Order @(string.IsNullOrWhiteSpace(it.Category) ? "" : "• " + it.Category)</div>
+                                <h3 class="font-semibold line-clamp-1">@it.Name</h3>
+                            </div>
+                            <label class="inline-flex items-center gap-2 text-sm">
+                                <input type="checkbox" class="done-checkbox h-4 w-4 rounded" />
+                                Tamam
+                            </label>
+                        </div>
+
+                        <div class="text-sm opacity-80">
+                            Set: @(it.Sets?.ToString() ?? "—") • Tekrar: @(string.IsNullOrWhiteSpace(it.Reps) ? "—" : it.Reps) • Dinlen: @(it.RestSec?.ToString() ?? "—") sn
+                        </div>
+
+                        <div class="pt-1 flex items-center justify-between">
+                            <a class="px-3 py-1.5 rounded-lg border border-gray-200 dark:border-gray-800 text-sm hover:bg-gray-100 dark:hover:bg-gray-800"
+                               href="@Url.Action("Detail","Exercise", new { id = it.ExerciseId })" target="_blank">
+                                Detay
+                            </a>
+                            <button class="rest-btn px-3 py-1.5 rounded-lg border border-gray-200 dark:border-gray-800 text-sm"
+                                    data-sec="@(it.RestSec ?? 60)">
+                                Dinlen başlat
+                            </button>
+                        </div>
+                    </div>
+                </article>
+            }
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <script src="~/js/plan-detail.js" asp-append-version="true"></script>
+}

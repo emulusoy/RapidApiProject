@@ -1,0 +1,43 @@
+﻿@{
+    var ctrl = (ViewContext.RouteData.Values["controller"]?.ToString() ?? "").ToLowerInvariant();
+    var act = (ViewContext.RouteData.Values["action"]?.ToString() ?? "").ToLowerInvariant();
+
+    string LinkCls(bool active) => active
+        ? "text-indigo-600 bg-indigo-50 dark:bg-indigo-900/30 font-semibold"
+        : "text-gray-700 dark:text-gray-300 hover:text-indigo-600 hover:bg-gray-100 dark:hover:bg-gray-800";
+}
+
+<nav class="mb-6 rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-2 sm:p-3">
+    <ul class="flex flex-wrap items-center gap-2 text-sm">
+        <li>
+            <a href="@Url.Action("Index","Exercise")"
+               class="px-3 py-2 rounded-xl border border-transparent @LinkCls(act=="index")">
+                <i class="fa-solid fa-home mr-2"></i> Egzersizler
+            </a>
+        </li>
+        <li>
+            <a href="@Url.Action("PlanBuilder","Training")"
+               class="px-3 py-2 rounded-xl border border-transparent @LinkCls(act=="planbuilder")">
+                <i class="fa-solid fa-pen-to-square mr-2"></i> Plan Oluştur
+            </a>
+        </li>
+        <li>
+            <a href="@Url.Action("MyPlans","Training")"
+               class="px-3 py-2 rounded-xl border border-transparent @LinkCls(act=="myplans" || act=="plandetail")">
+                <i class="fa-solid fa-layer-group mr-2"></i> Planlarım
+            </a>
+        </li>
+        <li>
+            <a href="@Url.Action("Library","Exercise")"
+               class="px-3 py-2 rounded-xl border border-transparent @LinkCls(ctrl=="exercise" && act=="library")">
+                <i class="fa-solid fa-book mr-2"></i> Egzersiz Kütüphanesi
+            </a>
+        </li>
+        <li class="ml-auto">
+            <a href="@Url.Action("Planner","Training")"
+               class="px-3 py-2 rounded-xl border border-transparent @LinkCls(act=="planner")">
+                <i class="fa-solid fa-calendar-week mr-2"></i> Haftalık Plan
+            </a>
+        </li>
+    </ul>
+</nav>

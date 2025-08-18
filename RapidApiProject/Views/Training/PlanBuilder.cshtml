@@ -1,0 +1,109 @@
+﻿@model PlanBuilderVM
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Plan Oluştur";
+
+    var ctrl = (ViewContext.RouteData.Values["controller"]?.ToString() ?? "").ToLowerInvariant();
+    var act = (ViewContext.RouteData.Values["action"]?.ToString() ?? "").ToLowerInvariant();
+
+    string LinkCls(bool active) => active
+        ? "text-indigo-600 bg-indigo-50 dark:bg-indigo-900/30 font-semibold"
+        : "text-gray-700 dark:text-gray-300 hover:text-indigo-600 hover:bg-gray-100 dark:hover:bg-gray-800";
+}
+
+<section class="py-6">
+    <div class="mx-auto max-w-7xl">
+
+        <!-- SAYFA-İÇİ NAVBAR -->
+        @Html.Partial("_TrainingNav")
+
+        <!-- ASIL İÇERİK (Plan Builder layoutu) -->
+        <div class="grid gap-6 lg:grid-cols-12">
+
+            <!-- SOL: Egzersiz Kütüphanesi -->
+            <aside class="lg:col-span-5 xl:col-span-4">
+                <div class="rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-4 sm:p-6 shadow-sm sticky top-20 space-y-4">
+
+                    <div class="flex items-center justify-between">
+                        <h2 class="text-lg font-semibold">Egzersiz Kütüphanesi</h2>
+                        <a href="@Url.Action("Library","Exercise")" class="text-xs underline opacity-80">Tümünü Aç</a>
+                    </div>
+
+                    <div class="flex gap-2">
+                        <input id="q" placeholder="Ara (örn: press, row...)"
+                               class="w-full rounded-xl border border-gray-300 dark:border-gray-700 bg-transparent px-3 py-2 text-sm">
+                        <button id="btnSearch" class="px-3 py-2 rounded-xl border border-gray-200 dark:border-gray-800">Ara</button>
+                    </div>
+
+                    <div class="flex items-center gap-2 text-xs">
+                        <select id="region" class="rounded-lg border border-gray-300 dark:border-gray-700 bg-transparent px-2 py-1">
+                            <option value="">Bölüm (tümü)</option>
+                            <option value="chest">Göğüs</option>
+                            <option value="back">Sırt</option>
+                            <option value="shoulders">Omuz</option>
+                            <option value="arms">Kol</option>
+                            <option value="legs">Bacak</option>
+                            <option value="abs">Karın</option>
+                            <option value="glutes">Kalça</option>
+                        </select>
+                        <span class="opacity-60">• Karttan “Ekle” ile sağa taşı</span>
+                    </div>
+
+                    <ul id="results" class="mt-2 space-y-3 max-h-[60vh] overflow-auto">
+                        <li class="py-3 text-sm text-gray-500 dark:text-gray-400">Yükleniyor…</li>
+                    </ul>
+                </div>
+            </aside>
+
+            <!-- SAĞ: Plan Oluşturucu -->
+            <main class="lg:col-span-7 xl:col-span-8">
+                <div class="rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-4 sm:p-6 shadow-sm">
+
+                    <!-- Başlık + Kaydet -->
+                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                        <div class="w-full">
+                            <label class="text-sm font-medium">Plan Başlığı</label>
+                            <input id="planTitle" value="@Model.Title" placeholder="Örn: Göğüs + Arka Kol"
+                                   class="mt-1 w-full rounded-xl border border-gray-300 dark:border-gray-700 bg-transparent px-3 py-2" />
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <a href="@Url.Action("MyPlans","Training")"
+                               class="inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-gray-200 dark:border-gray-800">
+                                <i class="fa-regular fa-folder-open"></i> Planlarım
+                            </a>
+                            <button id="btnSave"
+                                    class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-indigo-600 text-white hover:bg-indigo-700 transition">
+                                <i class="fa-solid fa-floppy-disk"></i> Kaydet
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Seçilenler -->
+                    <section class="mt-6">
+                        <header class="flex items-center justify-between">
+                            <h3 class="font-semibold">Seçilen Egzersizler</h3>
+                            <div class="text-xs opacity-70"><span id="selCount">0</span> öğe</div>
+                        </header>
+
+                        <ul id="selected" class="mt-3 space-y-2">
+                            <li class="text-sm text-gray-500 dark:text-gray-400">Henüz egzersiz eklenmedi.</li>
+                        </ul>
+                    </section>
+                </div>
+            </main>
+
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <script>
+        window.PlanCfg = {
+          urls: {
+            search: '@Url.Action("SearchExercises", "Training")',
+            save:   '@Url.Action("SavePlan", "Training")'
+          }
+        };
+    </script>
+    <script src="~/js/training-planbuilder.js" asp-append-version="true"></script>
+}

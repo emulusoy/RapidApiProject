@@ -1,0 +1,66 @@
+﻿@model RapidApiProject.Models.PlanListVM
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Planlarım";
+}
+
+<section class="py-6">
+    <div class="mx-auto max-w-7xl">
+        @Html.Partial("_TrainingNav")
+        <div class="flex items-center justify-between mb-4">
+            <h1 class="text-2xl font-bold tracking-tight">Planlarım</h1>
+            <div class="flex items-center gap-2 text-sm">
+                <a href="@Url.Action("PlanBuilder","Training")"
+                   class="px-3 py-2 rounded-xl bg-indigo-600 text-white hover:bg-indigo-700">
+                    Yeni Plan Oluştur
+                </a>
+            </div>
+        </div>
+
+        @if (Model.Plans.Count == 0)
+        {
+            <div class="rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-6 text-gray-600 dark:text-gray-300">
+                Henüz plan yok. İlk planını oluşturmak için
+                <a class="text-indigo-600 underline" href="@Url.Action("PlanBuilder","Training")">buraya tıkla</a>.
+            </div>
+        }
+        else
+        {
+            <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                @foreach (var p in Model.Plans)
+                {
+                    <article class="group rounded-2xl overflow-hidden border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 shadow-sm hover:shadow-md transition">
+                        <!-- ÜST GÖRSEL (kare oran) -->
+                        <div class="relative">
+                            <div class="aspect-square w-full overflow-hidden">
+                                <img src="@p.FirstImage" alt="@p.Title" class="h-full w-full object-cover" />
+                            </div>
+                            <!-- Sağ üst: egzersiz sayısı -->
+                            <div class="absolute right-3 top-3">
+                                <span class="inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font-medium bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-200">
+                                    <i class="fa-solid fa-list-check"></i> @p.ItemCount
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- ALT BÖLÜM -->
+                        <div class="p-4">
+                            <h3 class="font-semibold line-clamp-1">@p.Title</h3>
+
+                            <div class="mt-3 flex items-center justify-between">
+                                <a href="@Url.Action("PlanDetail","Training", new { id = p.Id })"
+                                   class="inline-flex items-center gap-2 px-3 py-2 rounded-xl border border-gray-200 dark:border-gray-800 text-sm hover:bg-gray-100 dark:hover:bg-gray-800">
+                                    <i class="fa-regular fa-eye"></i> Detay
+                                </a>
+                                <!-- gelecekte: planı uygula / sil -->
+                                @* <a href="#" class="inline-flex items-center gap-2 px-3 py-2 rounded-xl border border-rose-200 text-rose-600 dark:border-rose-900/60 text-sm hover:bg-rose-50 dark:hover:bg-rose-900/20">
+                               <i class="fa-solid fa-trash"></i> Sil
+                            </a> *@
+                            </div>
+                        </div>
+                    </article>
+                }
+            </div>
+        }
+    </div>
+</section>
