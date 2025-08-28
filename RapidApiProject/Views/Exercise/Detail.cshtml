@@ -6,13 +6,13 @@
         ? "https://via.placeholder.com/1000x600?text=Exercise"
         : Model.Image;
 
-    // YouTube/Vimeo embed (varsa)
+
     string? EmbedUrl()
     {
         if (string.IsNullOrWhiteSpace(Model.VideoUrl)) return null;
         var url = Model.VideoUrl;
 
-        // YouTube
+
         if (url.Contains("youtube.com/watch"))
         {
             var uri = new Uri(url);
@@ -25,13 +25,13 @@
             var id = url.Split('/').Last();
             if (!string.IsNullOrEmpty(id)) return $"https://www.youtube.com/embed/{id}";
         }
-        // Vimeo
+
         if (url.Contains("vimeo.com/"))
         {
             var id = url.Split('/').Last();
             if (!string.IsNullOrEmpty(id)) return $"https://player.vimeo.com/video/{id}";
         }
-        return null; // bilinmiyorsa normal link gösteririz
+        return null;
     }
 
     var embed = EmbedUrl();
@@ -41,10 +41,10 @@
     @Html.Partial("_TrainingNav")
     <div class="mx-auto max-w-7xl grid gap-6 lg:grid-cols-12">
        
-        <!-- Sol: içerik -->
+
         <article class="lg:col-span-8">
             <div class="rounded-2xl border border-gray-200 dark:border-gray-800 overflow-hidden bg-white dark:bg-gray-900 shadow-sm">
-                <!-- Kapak -->
+
                 <div class="relative">
                     <img src="@Img()" alt="@Model.Name" class="w-full h-64 sm:h-80 object-cover">
                     <div class="absolute inset-x-0 bottom-0 p-4 sm:p-6 bg-gradient-to-t from-black/40 to-transparent text-white">
@@ -56,7 +56,6 @@
                         <h1 class="mt-1 text-2xl sm:text-3xl font-bold">@Model.Name</h1>
                     </div>
 
-                    <!-- Favori -->
                     <button id="favBtn"
                             class="absolute right-4 top-4 h-11 w-11 inline-flex items-center justify-center rounded-full
                          bg-white/90 dark:bg-gray-900/90 border border-gray-200 dark:border-gray-800"
@@ -65,16 +64,15 @@
                     </button>
                 </div>
 
-                <!-- Meta + Notlar -->
+
                 <div class="p-4 sm:p-6 space-y-6">
-                    <!-- Rozetler -->
+
                     <div class="flex flex-wrap gap-2 text-xs">
                         <span class="rounded-full px-2 py-1 bg-indigo-100 text-indigo-700 dark:bg-indigo-900/40 dark:text-indigo-200">@Model.Mechanics</span>
                         <span class="rounded-full px-2 py-1 bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-200">@Model.Equipment</span>
                         <span class="rounded-full px-2 py-1 bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-200">@Model.Difficulty</span>
                     </div>
 
-                    <!-- Kas grupları -->
                     <div class="grid gap-4 sm:grid-cols-2">
                         <div>
                             <h3 class="text-sm font-semibold mb-1">Primary Muscles</h3>
@@ -90,7 +88,6 @@
                         </div>
                     </div>
 
-                    <!-- Video / Link -->
                     @if (!string.IsNullOrWhiteSpace(Model.VideoUrl))
                     {
                         <div>
@@ -113,7 +110,6 @@
                         </div>
                     }
 
-                    <!-- Notlar -->
                     @if (!string.IsNullOrWhiteSpace(Model.Notes))
                     {
                         <div>
@@ -127,7 +123,6 @@
             </div>
         </article>
 
-        <!-- Sağ: ilgili egzersizler -->
         <aside class="lg:col-span-4">
             <div class="rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-4 sm:p-6 sticky top-20">
                 <h2 class="text-lg font-semibold mb-3">İlgili Egzersizler</h2>
@@ -164,7 +159,7 @@
 
 @section Scripts {
     <script>
-        // Favori toggle
+
         (function(){
           const btn = document.getElementById('favBtn');
           const icn = document.getElementById('favIcon');

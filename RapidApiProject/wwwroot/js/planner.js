@@ -1,16 +1,14 @@
-﻿// wwwroot/js/planner.js
-
+﻿
 const COLORS = ["indigo", "emerald", "rose", "amber", "violet", "sky", "slate", "fuchsia"];
 
 const Store = {
-    tasks: [],        // { id, title, notes, scheduledDate:'YYYY-MM-DD'|null, scope, done, color }
-    goals: [],        // { id, title, scope, completed }
-    changed: new Set(),   // drag ile tarih değişenler vs. (hala "Kaydet" ile upsert)
+    tasks: [],      
+    goals: [],        
+    changed: new Set(),   
 };
 
-let viewYear, viewMonthIndex; // 0-based
+let viewYear, viewMonthIndex; 
 
-// ---------- Local date helpers (UTC yok) ----------
 function ymdFromLocalDate(d) {
     const y = d.getFullYear();
     const m = String(d.getMonth() + 1).padStart(2, "0");
@@ -26,7 +24,6 @@ function normalizeServerDate(x) {
     return ymdFromLocalDate(d);
 }
 
-// ---------- HTTP ----------
 async function getJson(url) {
     const r = await fetch(url, { credentials: "same-origin" });
     if (!r.ok) throw new Error("GET " + url + " failed");
@@ -47,8 +44,6 @@ async function postDelete(id) {
     if (!r.ok) throw new Error("Delete failed");
     return true;
 }
-
-// ---------- Data load / create ----------
 async function loadMonthData(year, month1) {
     const data = await getJson(`/Planner/MonthData?year=${year}&month=${month1}`);
     Store.tasks = (data.tasks || []).map((t, i) => ({
@@ -70,8 +65,6 @@ async function createTask({ title, scope = "day", date = null, color = "indigo",
     Store.tasks.push(task);
     return task;
 }
-
-// ---------- Modal (detay) ----------
 function openTaskModal(task) {
     const modal = document.getElementById("taskModal");
     if (!modal) return;
@@ -86,7 +79,6 @@ function openTaskModal(task) {
     delBtn.onclick = async () => {
         if (!confirm("Bu görevi silmek istiyor musun?")) return;
         try { await postDelete(task.id); } catch { alert("Silme sırasında hata oluştu."); return; }
-        // Store'dan çıkar ve UI'ı yenile
         const idx = Store.tasks.findIndex(t => t.id === task.id);
         if (idx >= 0) Store.tasks.splice(idx, 1);
         closeTaskModal();
@@ -104,8 +96,6 @@ function closeTaskModal() {
     const modal = document.getElementById("taskModal");
     if (modal) modal.classList.add("hidden");
 }
-
-// ---------- Chip (wrap + info + delete) ----------
 function chip(task) {
     const el = document.createElement("div");
     el.className =
@@ -114,19 +104,17 @@ function chip(task) {
      hover:bg-gray-100 dark:hover:bg-gray-800`;
     el.draggable = true;
     el.dataset.taskId = task.id;
-    el.title = ""; // native tooltip kapalı
+    el.title = ""; 
 
     const dot = document.createElement("span");
     dot.className = `inline-block h-2.5 w-2.5 rounded-full bg-${task.color || "indigo"}-500 shrink-0`;
     el.appendChild(dot);
 
-    // --- Tek satır (truncate) metin ---
     const txt = document.createElement("span");
-    txt.className = "flex-1 min-w-0 truncate";  // <— tek satır, ‘…’ ile kes
+    txt.className = "flex-1 min-w-0 truncate"; 
     txt.textContent = task.title;
     el.appendChild(txt);
 
-    // info butonu
     const info = document.createElement("button");
     info.type = "button";
     info.className = "p-1 rounded text-indigo-600 hover:bg-indigo-50 dark:hover:bg-indigo-900/30 shrink-0";
@@ -135,7 +123,6 @@ function chip(task) {
     info.addEventListener("click", (e) => { e.stopPropagation(); e.preventDefault(); openTaskModal(task); });
     el.appendChild(info);
 
-    // sil butonu
     const del = document.createElement("button");
     del.type = "button";
     del.className = "p-1 rounded text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-900/30 shrink-0";
@@ -156,7 +143,6 @@ function chip(task) {
     });
     el.appendChild(del);
 
-    // --- Hover'da popover (layout'u bozmaz) ---
     const pop = document.createElement("div");
     pop.className =
         `hidden group-hover:block absolute left-0 top-full mt-1 z-20 w-64 max-w-[80vw]
@@ -170,7 +156,6 @@ function chip(task) {
   `;
     el.appendChild(pop);
 
-    // drag - ikonlarda sürükleme olmasın
     el.addEventListener("dragstart", (e) => {
         if ((e.target.closest && e.target.closest('button'))) { e.preventDefault(); return; }
         e.dataTransfer.setData("text/plain", String(task.id));
@@ -182,12 +167,10 @@ function chip(task) {
     return el;
 }
 
-// basit XSS koruması için:
 function escapeHtml(s) {
     return String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 }
 
-// ---------- Side panels ----------
 function renderSidePanels() {
     const backlog = document.getElementById("backlogList");
     if (backlog) {
@@ -233,8 +216,6 @@ function renderSidePanels() {
         });
     }
 }
-
-// ---------- Month view ----------
 function renderMonth(year, monthIndex0) {
     viewYear = year;
     viewMonthIndex = monthIndex0;
@@ -274,7 +255,6 @@ function renderMonth(year, monthIndex0) {
             list.className = "flex-1 mt-1 space-y-2 overflow-y-auto pr-1";
         }
 
-        // header
         const head = document.createElement("div");
         head.className = "flex items-center justify-between gap-2 mb-2";
         head.innerHTML = `
@@ -290,7 +270,6 @@ function renderMonth(year, monthIndex0) {
     `;
         cell.appendChild(head);
 
-        // droppable list
         const list = document.createElement("div");
         list.className = "space-y-2 min-h-16";
         list.addEventListener("dragover", (e) => e.preventDefault());
@@ -299,18 +278,16 @@ function renderMonth(year, monthIndex0) {
             const id = Number(e.dataTransfer.getData("text/plain"));
             const task = Store.tasks.find(t => t.id === id);
             if (!task) return;
-            task.scheduledDate = dateStr;    // yerel string
+            task.scheduledDate = dateStr; 
             Store.changed.add(task.id);
             list.appendChild(chip(task));
             renderSidePanels();
         });
         cell.appendChild(list);
 
-        // mevcut görevler
         Store.tasks.filter(t => t.scheduledDate === dateStr)
             .forEach(t => list.appendChild(chip(t)));
 
-        // küçük ekle
         head.querySelector(".addSmall").addEventListener("click", async () => {
             const title = prompt(`${dateStr} için görev:`);
             if (title && title.trim().length) {
@@ -323,8 +300,6 @@ function renderMonth(year, monthIndex0) {
         grid.appendChild(cell);
     }
 }
-
-// ---------- Quick add ----------
 function bindQuickAdd() {
     const btn = document.getElementById("quickAdd");
     if (!btn) return;
@@ -348,7 +323,6 @@ function bindQuickAdd() {
     });
 }
 
-// ---------- Month navigation ----------
 function bindMonthNav() {
     const prev = document.getElementById("prevMonth");
     const next = document.getElementById("nextMonth");
@@ -375,8 +349,6 @@ function bindMonthNav() {
         renderMonth(d.getFullYear(), d.getMonth());
     });
 }
-
-// ---------- Save (drag ile tarih değişikliklerini yaz) ----------
 function bindSave() {
     const btn = document.getElementById("saveChanges");
     if (!btn) return;
@@ -407,8 +379,6 @@ function bindSave() {
         }
     });
 }
-
-// ---------- Focus (3 gün) ----------
 async function ensureFocusData(mode = "next") {
     const today = new Date();
     const days = [];
@@ -508,14 +478,12 @@ function renderFocus(mode = "next") {
     }
 }
 
-// ---------- Init ----------
 document.addEventListener("DOMContentLoaded", async () => {
     const now = new Date();
 
-    // Ay takvimi sayfası
     if (document.getElementById("calendarGrid")) {
         const y = (window.PLANNER?.year) || now.getFullYear();
-        const m = (window.PLANNER?.month) || (now.getMonth() + 1); // 1-based
+        const m = (window.PLANNER?.month) || (now.getMonth() + 1); 
         await loadMonthData(y, m);
         renderSidePanels();
         renderMonth(y, m - 1);
@@ -524,7 +492,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         bindSave();
     }
 
-    // 3 gün odak sayfası
     if (document.getElementById("focusColumns")) {
         const mode = (document.getElementById("focusMode")?.value) || "next";
         await ensureFocusData(mode);
@@ -532,7 +499,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         renderFocus(mode);
     }
 
-    // Modal kapama
     document.getElementById("taskModalClose")?.addEventListener("click", closeTaskModal);
     document.getElementById("taskModalBackdrop")?.addEventListener("click", (e) => {
         if (e.target.id === "taskModalBackdrop") closeTaskModal();

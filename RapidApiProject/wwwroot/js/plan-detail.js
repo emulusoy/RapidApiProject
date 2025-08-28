@@ -1,5 +1,4 @@
 ﻿(function () {
-    // ----- Kronometre -----
     const elTime = document.getElementById('swTime');
     const btnStart = document.getElementById('swStart');
     const btnPause = document.getElementById('swPause');
@@ -47,8 +46,6 @@
     btnPause?.addEventListener('click', pause);
     btnReset?.addEventListener('click', reset);
     render();
-
-    // ----- Global hızlı dinlenme -----
     const restQuickBtns = document.querySelectorAll('.rest-quick');
     const restLabel = document.getElementById('restCountdown');
     let restTimer = null, restLeft = 0;
@@ -74,7 +71,6 @@
         });
     });
 
-    // ----- Her kartta dinlenme sayacı -----
     document.querySelectorAll('.rest-btn').forEach(btn => {
         let timer = null, left = 0, orig = btn.textContent;
 
@@ -93,7 +89,6 @@
         });
     });
 
-    // ----- Tamamlandı işaretleme (görsel) -----
     document.querySelectorAll('.done-checkbox').forEach(ch => {
         ch.addEventListener('change', () => {
             const card = ch.closest('article');

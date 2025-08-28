@@ -21,9 +21,8 @@ namespace RapidApiProject.Entities
 
         public bool IsTemplate { get; set; } = false;
 
-        public DateTime CreatedAt { get; set; }  // default: SYSUTCDATETIME()
+        public DateTime CreatedAt { get; set; } 
 
-        // Nav
         public ICollection<TrainingDay> Days { get; set; } = new List<TrainingDay>();
     }
 }

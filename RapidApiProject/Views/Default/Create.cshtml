@@ -18,14 +18,13 @@
         @Html.ValidationSummary(excludePropertyErrors: true, message: null,
                  htmlAttributes: new { @class = "mb-4 text-sm text-rose-600" })
 
-        <!-- !!! Controller'ı Default yaptık -->
         <form asp-action="Create" asp-controller="Default" method="post" class="space-y-5">
 
 
             @Html.AntiForgeryToken()
             <input type="hidden" name="returnUrl" value="@backUrl" />
 
-            <!-- Type -->
+      
             <div>
                 <label class="block text-sm font-medium mb-1">Type</label>
                 <select asp-for="Type"
@@ -39,14 +38,13 @@
                 <span asp-validation-for="Type" class="text-sm text-rose-600"></span>
             </div>
 
-            <!-- Title -->
+            
             <div>
                 <label class="block text-sm font-medium mb-1">Title</label>
                 <input asp-for="Title" class="w-full rounded-xl border border-gray-300 dark:border-gray-700 bg-transparent px-3 py-2" />
                 <span asp-validation-for="Title" class="text-sm text-rose-600"></span>
             </div>
 
-            <!-- Image URL + Preview -->
             <div>
                 <label class="block text-sm font-medium mb-1">Image URL</label>
                 <input asp-for="Image" placeholder="https://..." class="w-full rounded-xl border border-gray-300 dark:border-gray-700 bg-transparent px-3 py-2" />
@@ -57,21 +55,21 @@
                 </div>
             </div>
 
-            <!-- Rating (string) -->
+         
             <div>
                 <label class="block text-sm font-medium mb-1">Rating</label>
                 <input asp-for="Rating" placeholder="7.8" class="w-full rounded-xl border border-gray-300 dark:border-gray-700 bg-transparent px-3 py-2" />
                 <span asp-validation-for="Rating" class="text-sm text-rose-600"></span>
             </div>
 
-            <!-- Description -->
+       
             <div>
                 <label class="block text-sm font-medium mb-1">Description</label>
                 <textarea asp-for="Description" rows="4" class="w-full rounded-xl border border-gray-300 dark:border-gray-700 bg-transparent px-3 py-2"></textarea>
                 <span asp-validation-for="Description" class="text-sm text-rose-600"></span>
             </div>
 
-            <!-- Watched switch -->
+            
             <div class="flex items-center gap-3">
                 <input asp-for="Watched" type="checkbox" id="watched" class="peer sr-only" />
                 <label for="watched"
@@ -81,7 +79,7 @@
                 <span class="text-sm">Watched</span>
             </div>
 
-            <!-- Actions -->
+            
             <div class="pt-2 flex items-center gap-3">
                 <button type="submit"
                         class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-indigo-600 text-white hover:bg-indigo-700 transition">
@@ -98,7 +96,7 @@
 
 @section Scripts {
     <script>
-        // Image preview
+     
         const imgInput = document.getElementById('Image');
         const preview = document.getElementById('preview');
         if (imgInput && preview) {

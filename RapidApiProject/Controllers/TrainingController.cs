@@ -51,7 +51,7 @@ namespace RapidApiProject.Controllers
                         mech = e.Mechanics,
                         eq = e.Equipment,
                         diff = e.Difficulty,
-                        img = e.Image // DB'de yoksa placeholder kullanacağız (JS tarafı)
+                        img = e.Image 
                     })
                     .ToListAsync();
 
@@ -59,7 +59,6 @@ namespace RapidApiProject.Controllers
             }
             catch (Exception ex)
             {
-                // burada loglayabilirsiniz (ex.ToString())
                 return StatusCode(500, new { ok = false, message = ex.Message });
             }
         }
@@ -92,9 +91,8 @@ namespace RapidApiProject.Controllers
             if (items == null || items.Count == 0)
                 return BadRequest(new { ok = false, message = "En az bir egzersiz ekleyin." });
 
-            var userId = "demo"; // Auth ekleyince User.Identity.Name vb.
+            var userId = "demo"; 
 
-            // Program (şablon amaçlı)
             var program = new TrainingProgram
             {
                 Title = title.Trim(),
@@ -106,7 +104,7 @@ namespace RapidApiProject.Controllers
             _db.TrainingPrograms.Add(program);
             await _db.SaveChangesAsync();
 
-            // Tek gün (konteyner)
+
             var day = new TrainingDay
             {
                 ProgramId = program.Id,
@@ -116,7 +114,6 @@ namespace RapidApiProject.Controllers
             _db.TrainingDays.Add(day);
             await _db.SaveChangesAsync();
 
-            // Öğeler
             int order = 0;
             foreach (var it in items.OrderBy(x => x.sort))
             {
@@ -132,11 +129,8 @@ namespace RapidApiProject.Controllers
             }
             await _db.SaveChangesAsync();
 
-            // Artık Planlar listesine dönelim
             return Ok(new { ok = true, id = program.Id, redirect = Url.Action("MyPlans") });
         }
-
-        // ---------- YENİ: Planlarım (kart listesi) ----------
         [HttpGet]
         public async Task<IActionResult> MyPlans()
         {
@@ -173,8 +167,6 @@ namespace RapidApiProject.Controllers
 
             return View(vm);
         }
-
-        // (Opsiyonel) Detay sayfası
         [HttpGet]
         public async Task<IActionResult> PlanDetail(int id)
         {

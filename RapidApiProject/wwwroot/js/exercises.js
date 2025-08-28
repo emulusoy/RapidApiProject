@@ -1,5 +1,4 @@
-﻿// wwwroot/js/exercises.js
-
+﻿
 const REGION_LABELS = {
     chest: "Göğüs",
     abs: "Karın",
@@ -26,21 +25,15 @@ const flipBtn = document.getElementById("flipSide");
 const listEl = document.getElementById("exerciseList");
 const titleEl = document.getElementById("regionTitle");
 const searchEl = document.getElementById("searchInput");
-
-// yeni elemanlar
 const sideBadge = document.getElementById("sideBadge");
 const btnFront = document.getElementById("btnFront");
 const btnBack = document.getElementById("btnBack");
-
 let currentRegion = null;
 let currentSide = "front";
-
-// Bölge vurgulama stili
 const ACTIVE_FILL = "fill-indigo-400/40 stroke-indigo-600";
 const INACTIVE_FILL = "fill-transparent stroke-gray-300 dark:stroke-gray-700";
 const HOVER_FILL = "hover:fill-indigo-300/40 hover:stroke-indigo-500 cursor-pointer";
 
-// SVG içindeki tüm region şekillerini hazırla (ön+arka)
 [...document.querySelectorAll("#bodyFront .region, #bodyBack .region")].forEach(el => {
     el.setAttribute("vector-effect", "non-scaling-stroke");
     el.setAttribute("stroke-width", "2");
@@ -52,16 +45,13 @@ const HOVER_FILL = "hover:fill-indigo-300/40 hover:stroke-indigo-500 cursor-poin
 });
 
 function updateSideUI() {
-    // görünür panel
     bodyFront.classList.toggle("hidden", currentSide !== "front");
     bodyBack.classList.toggle("hidden", currentSide !== "back");
 
-    // rozet metni
     if (sideBadge) sideBadge.innerHTML = (currentSide === "front")
         ? `<i class="fa-regular fa-circle-dot"></i> Ön`
         : `<i class="fa-regular fa-circle-dot"></i> Arka`;
 
-    // sekmelerin aktifliği
     if (btnFront && btnBack) {
         if (currentSide === "front") {
             btnFront.classList.add("bg-indigo-50", "dark:bg-indigo-900/30", "text-indigo-700", "dark:text-indigo-200");
@@ -76,13 +66,11 @@ function updateSideUI() {
 function selectRegion(region) {
     currentRegion = region;
 
-    // Tüm bölgeleri pasifleştir
     [...document.querySelectorAll("#bodyFront .region, #bodyBack .region")].forEach(el => {
         ACTIVE_FILL.split(" ").forEach(c => el.classList.remove(c));
         INACTIVE_FILL.split(" ").forEach(c => el.classList.add(c));
     });
 
-    // Şu anki yüzün şekillerini aktif yap
     const scope = (currentSide === "front" ? "#bodyFront" : "#bodyBack");
     [...document.querySelectorAll(`${scope} .region[data-region="${region}"]`)].forEach(el => {
         INACTIVE_FILL.split(" ").forEach(c => el.classList.remove(c));
@@ -91,8 +79,6 @@ function selectRegion(region) {
 
     loadRegionList();
 }
-
-// Listeyi DB’den getir
 async function loadRegionList() {
     const label = REGION_LABELS[currentRegion] || "Bölge";
     titleEl.textContent = label;
@@ -146,18 +132,15 @@ function renderList(items) {
     });
 }
 
-// Arama (aktif bölge varsa canlı filtre)
 searchEl?.addEventListener("input", () => {
     if (currentRegion) loadRegionList();
 });
 
-// Ön/Arka çevir
 flipBtn?.addEventListener("click", () => {
     currentSide = (currentSide === "front" ? "back" : "front");
 
     updateSideUI();
 
-    // Yeni yüzde aynı region yoksa sıfırla
     if (currentRegion) {
         const scope = (currentSide === "front" ? "#bodyFront" : "#bodyBack");
         const exists = document.querySelector(`${scope} .region[data-region="${currentRegion}"]`);
@@ -171,13 +154,10 @@ flipBtn?.addEventListener("click", () => {
     }
 });
 
-// Sekmeler ile geçiş
 btnFront?.addEventListener("click", () => {
     if (currentSide !== "front") { currentSide = "front"; updateSideUI(); if (currentRegion) selectRegion(currentRegion); }
 });
 btnBack?.addEventListener("click", () => {
     if (currentSide !== "back") { currentSide = "back"; updateSideUI(); if (currentRegion) selectRegion(currentRegion); }
 });
-
-// ilk UI durumu
 updateSideUI();

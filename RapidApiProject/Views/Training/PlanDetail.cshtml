@@ -8,7 +8,6 @@
     <div class="mx-auto max-w-7xl">
         @Html.Partial("_TrainingNav")
 
-        <!-- Başlık + Kronometre -->
         <div class="rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-4 sm:p-6 shadow-sm">
             <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <div class="flex items-center gap-4">
@@ -19,7 +18,6 @@
                     </div>
                 </div>
 
-                <!-- Kronometre -->
                 <div class="rounded-xl border border-gray-200 dark:border-gray-800 p-3 sm:p-4">
                     <div class="text-center">
                         <div id="swTime" class="text-3xl font-mono tabular-nums">00:00.0</div>
@@ -40,7 +38,6 @@
             </div>
         </div>
 
-        <!-- Egzersiz Listesi -->
         <div class="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             @foreach (var it in Model.Items)
             {

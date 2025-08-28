@@ -31,11 +31,9 @@
                 </nav>
             </div>
         </aside>
-
-        <!-- Sağ: Liste -->
         <main class="lg:col-span-9">
             <div class="rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-4 sm:p-6">
-                <!-- Üst bar: başlık + arama + hızlı filtre -->
+             
                 <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                     <h1 class="text-2xl font-bold">
                         @(
@@ -55,11 +53,10 @@
                     </form>
                 </div>
 
-                <!-- Filtreler -->
                 <div class="mt-4 flex flex-wrap items-center gap-2 text-sm">
                     <span class="opacity-70 mr-2">Filtre:</span>
 
-                    @* Mechanics *@
+                    
                     @{
                         var mechAll = QP(new { region = Model.Region, q = Model.Q, equipment = Model.Equipment, difficulty = Model.Difficulty, mechanics = (string?)null });
                         var mechComp = QP(new { region = Model.Region, q = Model.Q, equipment = Model.Equipment, difficulty = Model.Difficulty, mechanics = "Compound" });
@@ -69,7 +66,7 @@
                     <a class="px-3 py-1.5 rounded-xl border @Active(Model.Mechanics=="Compound")" href="@mechComp">Compound</a>
                     <a class="px-3 py-1.5 rounded-xl border @Active(Model.Mechanics=="Isolation")" href="@mechIso">Isolation</a>
 
-                    @* Equipment *@
+                   
                     @{
                         string Eq(string? e) => QP(new { region = Model.Region, q = Model.Q, mechanics = Model.Mechanics, difficulty = Model.Difficulty, equipment = e });
                     }
@@ -79,7 +76,7 @@
                     <a class="px-3 py-1.5 rounded-xl border @Active(Model.Equipment=="Barbell")" href="@Eq("Barbell")">Barbell</a>
                     <a class="px-3 py-1.5 rounded-xl border @Active(Model.Equipment=="Machine")" href="@Eq("Machine")">Machine</a>
 
-                    @* Difficulty *@
+                    
                     @{
                         string Df(string? d) => QP(new { region = Model.Region, q = Model.Q, mechanics = Model.Mechanics, equipment = Model.Equipment, difficulty = d });
                     }
@@ -89,7 +86,7 @@
                     <a class="px-3 py-1.5 rounded-xl border @Active(Model.Difficulty=="Advanced")" href="@Df("Advanced")">Advanced</a>
                 </div>
 
-                <!-- Grid -->
+               
                 <div class="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
                     @foreach (var e in Model.Items)
                     {
@@ -117,7 +114,7 @@
                     }
                 </div>
 
-                <!-- Pagination -->
+                
                 @if (Model.TotalPages > 1)
                 {
                     <nav class="mt-8 flex items-center justify-center gap-2">

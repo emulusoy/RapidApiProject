@@ -29,7 +29,7 @@
                 )
         </h1>
 
-        <!-- Tip sekmeleri -->
+     
         <div class="flex rounded-xl border border-gray-200 dark:border-gray-800 overflow-hidden">
             <a class="px-4 py-2 text-sm transition @ActiveTab("movie")" href="@Url.Action("Index", new { type="movie",  filter=Model.Filter })"><i class="fa-solid fa-film mr-2"></i> Movies</a>
             <a class="px-4 py-2 text-sm transition @ActiveTab("series")" href="@Url.Action("Index", new { type="series", filter=Model.Filter })"><i class="fa-solid fa-tv mr-2"></i> Series</a>
@@ -37,7 +37,7 @@
             <a class="px-4 py-2 text-sm transition @ActiveTab("all")" href="@Url.Action("Index", new { type="all",    filter=Model.Filter })"><i class="fa-regular fa-clone mr-2"></i> All</a>
         </div>
 
-        <!-- Filtre -->
+        
         <div class="flex rounded-xl border border-gray-200 dark:border-gray-800 overflow-hidden">
             <a class="px-4 py-2 text-sm transition @ActiveFilter("all")" href="@Url.Action("Index", new { type=Model.Type, filter="all" })">All</a>
             <a class="px-4 py-2 text-sm transition @ActiveFilter("watched")" href="@Url.Action("Index", new { type=Model.Type, filter="watched" })">Watched</a>
@@ -45,7 +45,7 @@
         </div>
     </div>
 
-    <!-- Grid -->
+    
     <div class="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         @foreach (var m in Model.Items)
         {
@@ -102,7 +102,6 @@
         }
     </div>
 
-    <!-- Pagination -->
     @if (Model.TotalPages > 1)
     {
         <nav class="mt-8 flex items-center justify-center gap-2">

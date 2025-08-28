@@ -11,11 +11,9 @@ namespace RapidApiProject.Entities
         public int ProgramId { get; set; }
         public TrainingProgram Program { get; set; } = default!;
 
-        // Kişisel planda kullan (Pzt..Paz tekil tarih)
         [Column(TypeName = "date")]
         public DateTime? DayDate { get; set; }
 
-        // Şablonlarda kullan (1=Mon .. 7=Sun)
         public byte? DayOfWeek { get; set; }
 
         [MaxLength(80)]

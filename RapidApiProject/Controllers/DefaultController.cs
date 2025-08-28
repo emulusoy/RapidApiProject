@@ -25,7 +25,7 @@ namespace RapidApiProject.Controllers
             if (filter == "watched") query = query.Where(x => x.Watched);
             else if (filter == "not-watched") query = query.Where(x => !x.Watched);
 
-            // UYARI: Rating string old. için burada güvenli bir string sıralama + Title ile devam ediyoruz.
+            // rating string old. için burada güvenli bir string sıralama + Title ile devam ediyoruz.
             query = query.OrderByDescending(x => x.Rating).ThenBy(x => x.Title);
 
             var total = await query.CountAsync();
@@ -86,12 +86,11 @@ namespace RapidApiProject.Controllers
             {
                 "series" => series,
                 "game" => games,
-                "all" => movies.Concat(series).Concat(games), // EF Core UNION ALL olarak çevirir
+                "all" => movies.Concat(series).Concat(games), 
                 _ => movies
             };
         }
 
-        // İzlenme durumunu tersine çevir
         public async Task<IActionResult> EditWatch(string type, int id, string? returnUrl)
         {
             switch ((type ?? "").ToLowerInvariant())
@@ -117,7 +116,6 @@ namespace RapidApiProject.Controllers
                 : RedirectToAction(nameof(Index), new { type });
         }
 
-        // Sil
         public async Task<IActionResult> DeleteItem(string type, int id, string? returnUrl)
         {
             switch ((type ?? "").ToLowerInvariant())
@@ -142,7 +140,6 @@ namespace RapidApiProject.Controllers
                 ? Redirect(returnUrl)
                 : RedirectToAction(nameof(Index), new { type });
         }
-        //CREATE
 
 
         [HttpGet]
@@ -173,7 +170,7 @@ namespace RapidApiProject.Controllers
                     {
                         Title = vm.Title,
                         Image = vm.Image,
-                        Rating = vm.Rating,               // string -> string
+                        Rating = vm.Rating,               
                         Description = vm.Description,
                         Watched = vm.Watched
                     });
@@ -190,7 +187,7 @@ namespace RapidApiProject.Controllers
                     });
                     break;
 
-                default: // movie
+                default: 
                     _db.Movies.Add(new Movie
                     {
                         Title = vm.Title,
@@ -204,7 +201,6 @@ namespace RapidApiProject.Controllers
 
             await _db.SaveChangesAsync();
 
-            // geri dön veya ilgili tipe listeye git
             if (!string.IsNullOrWhiteSpace(returnUrl))
                 return Redirect(returnUrl);
 

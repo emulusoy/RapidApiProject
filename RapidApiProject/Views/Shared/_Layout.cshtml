@@ -21,8 +21,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>@(ViewBag.Title ?? "Film · Dizi · Oyun")</title>
     <meta name="color-scheme" content="light dark" />
-
-    <!-- İlk boyamada dark class -->
     <script>
         (function () {
           try {
@@ -49,7 +47,6 @@
 </head>
 
 <body class="min-h-screen bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-100 antialiased">
-    <!-- ÜST MENÜ -->
     <header class="fixed inset-x-0 top-0 z-40 border-b border-gray-200/70 bg-white/80 backdrop-blur-md dark:border-gray-800 dark:bg-gray-900/70">
         <div class="mx-auto max-w-7xl h-16 px-4 sm:px-6 lg:px-8 flex items-center justify-between">
             <a href="@Url.Action("Index","Default")" class="flex items-center gap-2 font-semibold tracking-tight">
@@ -73,11 +70,11 @@
                 <a class="@NavCls(ctrl=="default" && action=="create")"
                    href="@Url.Action("Create","Default", new { type = type })">Create</a>
 
-                @* ADDED: Planner (Ay) *@
+               
                 <a class="@NavCls(ctrl=="planner" && action=="index")"
                    href="@Url.Action("Index","Planner")">Planner</a>
 
-                @* ADDED: 3 Gün Odak *@
+              
                 <a class="@NavCls(ctrl=="planner" && action=="focus")"
                    href="@Url.Action("Focus","Planner")">Focus</a>
 
@@ -108,7 +105,6 @@
         </div>
     </header>
 
-    <!-- SAĞ İKON BAR (MD+) -->
     <aside class="hidden md:flex fixed top-16 right-0 z-30 h-[calc(100vh-4rem)] w-16 flex-col items-center gap-3 border-l border-gray-200 bg-white/80 backdrop-blur-md p-2 dark:border-gray-800 dark:bg-gray-900/70">
         <a class="@IconCls(ctrl=="default" && action=="index" && string.IsNullOrEmpty(type))" title="Home" href="@Url.Action("Index","Default")"><i class="fa-solid fa-house"></i></a>
         <a class="@IconCls(ctrl=="default" && action=="index" && type=="movie")" title="Movies" href='@Url.Action("Index","Default", new { type="movie" })'><i class="fa-solid fa-film"></i></a>
@@ -116,14 +112,12 @@
         <a class="@IconCls(ctrl=="default" && action=="index" && type=="game")" title="Games" href='@Url.Action("Index","Default", new { type="game" })'><i class="fa-solid fa-gamepad"></i></a>
         <a class="@IconCls(ctrl=="default" && action=="create")" title="Create" href='@Url.Action("Create","Default", new { type = type })'><i class="fa-solid fa-plus"></i></a>
 
-        @* ADDED: Planner ikonları *@
         <a class="@IconCls(ctrl=="planner" && action=="index")" title="Planner" href='@Url.Action("Index","Planner")'><i class="fa-solid fa-calendar-days"></i></a>
         <a class="@IconCls(ctrl=="planner" && action=="focus")" title="3 Gün Odak" href='@Url.Action("Focus","Planner")'><i class="fa-solid fa-bullseye"></i></a>
         <a class="@IconCls(ctrl=="exercise")" title="Exercises" href="@Url.Action("Library","Exercise")"><i class="fa-solid fa-dumbbell"></i></a>
 
     </aside>
 
-    <!-- MOBİL SAĞ PANEL -->
     <div id="mobileSide" class="fixed inset-0 z-50 md:hidden hidden">
         <div class="absolute inset-0 bg-black/40" data-close="1"></div>
         <div class="absolute right-0 top-16 bottom-0 w-64 bg-white dark:bg-gray-900 border-l border-gray-200 dark:border-gray-800 p-4">
@@ -134,14 +128,12 @@
                 <a href='@Url.Action("Index","Default", new { type="game" })' class="flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800"><i class="fa-solid fa-gamepad w-6"></i> Games</a>
                 <a href='@Url.Action("Create","Default", new { type = type })' class="flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800"><i class="fa-solid fa-plus w-6"></i> Create</a>
 
-                @* ADDED: Planner *@
                 <a href='@Url.Action("Index","Planner")' class="flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800"><i class="fa-solid fa-calendar-days w-6"></i> Planner</a>
                 <a href='@Url.Action("Focus","Planner")' class="flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800"><i class="fa-solid fa-bullseye w-6"></i> 3 Gün Odak</a>
             </nav>
         </div>
     </div>
 
-    <!-- İÇERİK -->
     <main class="pt-20 md:pr-20">
         <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             @RenderBody()
@@ -151,14 +143,12 @@
     @RenderSection("Scripts", required: false)
 
     <script>
-        // Tema toggle (class mod)
         document.getElementById('themeToggle')?.addEventListener('click', function () {
           var root = document.documentElement;
           var isDark = root.classList.toggle('dark');
           try { localStorage.setItem('theme', isDark ? 'dark' : 'light'); } catch(e){}
         });
 
-        // Mobil sağ menü
         const mobileSide = document.getElementById('mobileSide');
         document.getElementById('openSide')?.addEventListener('click', () => mobileSide?.classList.remove('hidden'));
         mobileSide?.addEventListener('click', (e) => {

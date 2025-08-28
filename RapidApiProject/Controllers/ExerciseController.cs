@@ -148,7 +148,6 @@ namespace RapidApiProject.Controllers
 
             region = region.Trim().ToLowerInvariant();
 
-            // Alt bölge -> ana kategori eşlemesi (ExerciseCategories.Slug ile eşleşmeli)
             var toMain = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
             {
                 ["biceps"] = "arms",
@@ -172,7 +171,6 @@ namespace RapidApiProject.Controllers
                 .AsNoTracking()
                 .Where(e => e.Category.Slug == main);
 
-            // İsteğe bağlı arama
             if (!string.IsNullOrWhiteSpace(q))
             {
                 q = q.Trim();

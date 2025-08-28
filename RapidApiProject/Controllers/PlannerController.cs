@@ -126,7 +126,7 @@ namespace RapidApiProject.Controllers
             return Json(new { id = e.Id });
         }
         [HttpPost]
-        [IgnoreAntiforgeryToken] // İstersen AntiForgery ekleyelim
+        [IgnoreAntiforgeryToken] 
         public async Task<IActionResult> Delete(int id)
         {
             var e = await _db.PlannerTasks.FindAsync(id);

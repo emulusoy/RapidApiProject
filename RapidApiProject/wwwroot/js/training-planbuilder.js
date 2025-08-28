@@ -11,7 +11,6 @@
     let results = [];
     let picks = [];
 
-    // --- Arama ---
     async function search() {
         try {
             const url = new URL(URLS.search, location.origin);
@@ -31,7 +30,6 @@
                 throw new Error(msg);
             }
 
-            // hem dizi (eski sürüm) hem {ok,items} (yeni) desteklenir
             results = Array.isArray(data) ? data : (data.items || []);
             renderResults();
         } catch (err) {
@@ -150,7 +148,6 @@
         renderPicks();
     }
 
-    // --- Kaydet ---
     async function savePlan() {
         const t = (title?.value || "").trim();
         if (!t) { alert("Lütfen plan başlığı girin."); return; }
@@ -182,12 +179,10 @@
         }
     }
 
-    // events
     btnSearch?.addEventListener('click', search);
     q?.addEventListener('keydown', e => { if (e.key === 'Enter') search(); });
     btnSave?.addEventListener('click', savePlan);
 
-    // İlk açılışta otomatik ara
     document.addEventListener('DOMContentLoaded', () => {
         if (region) region.value = "";
         if (q) q.value = "";
