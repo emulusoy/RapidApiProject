@@ -194,7 +194,7 @@ namespace RapidApiProject.Controllers
                         Image = vm.Image,
                         Rating = vm.Rating,
                         Description = vm.Description,
-                        Watched = vm.Watched
+                        Watched = vm.Watched     
                     });
                     break;
             }
